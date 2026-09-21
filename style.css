@@ -1,3 +1,6 @@
+/* ==========================================================================
+   VARIÁVEIS E CONFIGURAÇÕES GERAIS
+   ========================================================================== */
 :root {
     --primary-color: #0f4c81;
     --primary-hover: #0b3860;
@@ -23,10 +26,12 @@ body {
     padding-bottom: 50px;
 }
 
-/* Header */
+/* ==========================================================================
+   CABEÇALHO (HEADER)
+   ========================================================================== */
 .header {
     background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
-    color: white;
+    color: #ffffff;
     padding: 2.5rem 1rem;
     box-shadow: var(--shadow);
 }
@@ -55,14 +60,15 @@ body {
     margin-top: 0.2rem;
 }
 
-/* Container Principal */
+/* ==========================================================================
+   CONTAINER E NAVEGAÇÃO POR ABAS
+   ========================================================================== */
 .container {
     max-width: 1100px;
     margin: -1.5rem auto 0 auto;
     padding: 0 1rem;
 }
 
-/* Navegação por Abas */
 .tabs-nav {
     display: flex;
     gap: 0.5rem;
@@ -92,7 +98,7 @@ body {
 
 .tab-btn.active {
     background-color: var(--primary-color);
-    color: white;
+    color: #ffffff;
 }
 
 .tab-btn:hover:not(.active) {
@@ -100,7 +106,6 @@ body {
     color: var(--primary-color);
 }
 
-/* Conteúdo das Abas */
 .tab-content {
     display: none;
 }
@@ -109,7 +114,9 @@ body {
     display: block;
 }
 
-/* Busca */
+/* ==========================================================================
+   CAMPO DE BUSCA
+   ========================================================================== */
 .search-container {
     position: relative;
     margin-bottom: 1.5rem;
@@ -129,17 +136,19 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 10px;
     font-size: 1rem;
-    background-color: white;
+    background-color: #ffffff;
     box-shadow: var(--shadow);
     outline: none;
-    transition: border 0.2s;
+    transition: border-color 0.2s;
 }
 
 .search-container input:focus {
     border-color: var(--secondary-color);
 }
 
-/* Catálogo em Grid */
+/* ==========================================================================
+   CATÁLOGO E CARDS
+   ========================================================================== */
 .catalog-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -180,7 +189,7 @@ body {
     top: 10px;
     right: 10px;
     background-color: rgba(15, 76, 129, 0.9);
-    color: white;
+    color: #ffffff;
     padding: 0.3rem 0.7rem;
     border-radius: 20px;
     font-size: 0.75rem;
@@ -228,9 +237,11 @@ body {
     margin-top: auto;
 }
 
-/* Formulário */
+/* ==========================================================================
+   FORMULÁRIO DE CADASTRO
+   ========================================================================== */
 .form-card {
-    background-color: white;
+    background-color: #ffffff;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: var(--shadow);
@@ -268,12 +279,6 @@ body {
     gap: 1rem;
 }
 
-@media (max-width: 640px) {
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-}
-
 label {
     font-size: 0.88rem;
     font-weight: 600;
@@ -300,7 +305,7 @@ small {
 
 .btn-submit {
     background-color: var(--primary-color);
-    color: white;
+    color: #ffffff;
     border: none;
     padding: 1rem;
     width: 100%;
@@ -309,7 +314,7 @@ small {
     font-weight: 700;
     cursor: pointer;
     margin-top: 1rem;
-    transition: background 0.2s;
+    transition: background-color 0.2s;
 }
 
 .btn-submit:hover {
@@ -326,4 +331,22 @@ small {
 .loading-spinner i {
     font-size: 2rem;
     margin-bottom: 0.5rem;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (CELULARES)
+   ========================================================================== */
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo-icon {
+        font-size: 2.2rem;
+    }
 }
