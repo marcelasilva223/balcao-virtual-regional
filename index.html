@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balcão Virtual - Regional de Ensino</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Balcão Virtual Regional</h1>
+        <p>Plataforma de compartilhamento de itens e recursos entre escolas</p>
+    </header>
+
+    <nav class="nav-tabs">
+        <button id="tab-catalog-btn" class="active" onclick="switchTab('catalog')">Catálogo de Itens</button>
+        <button id="tab-announce-btn" onclick="switchTab('announce')">Anunciar Novo Item</button>
+    </nav>
+
+    <main class="container">
+        <!-- SEÇÃO: CATÁLOGO -->
+        <section id="tab-catalog" class="tab-content active">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Buscar por item, escola ou categoria..." oninput="filterItems()">
+            </div>
+            <div id="loading" class="loading">Carregando itens...</div>
+            <div id="catalog-list" class="catalog-grid"></div>
+        </section>
+
+        <!-- SEÇÃO: ANUNCIAR ITEM -->
+        <section id="tab-announce" class="tab-content">
+            <h2>Anunciar Item para Outras Escolas</h2>
+            <form id="form-announce" onsubmit="handleAnnounceSubmit(event)">
+                <div class="form-group">
+                    <label for="announce-title">Título do Item*</label>
+                    <input type="text" id="announce-title" required placeholder="Ex: Projetor Epson PowerLite">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-category">Categoria*</label>
+                        <select id="announce-category" required>
+                            <option value="">Selecione...</option>
+                            <option value="Tecnologia/Informática">Tecnologia/Informática</option>
+                            <option value="Mobiliário">Mobiliário</option>
+                            <option value="Equipamento de Som/Áudio">Equipamento de Som/Áudio</option>
+                            <option value="Material Didático/Esportivo">Material Didático/Esportivo</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="announce-quantity">Quantidade*</label>
+                        <input type="number" id="announce-quantity" min="1" required value="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-condition">Estado do Item*</label>
+                        <select id="announce-condition" required>
+                            <option value="Novo/Sem uso">Novo/Sem uso</option>
+                            <option value="Usado - Excelente">Usado - Excelente</option>
+                            <option value="Usado - Bom">Usado - Bom</option>
+                            <option value="Necessita pequeno reparo">Necessita pequeno reparo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="announce-patrimony">Nº de Patrimônio</label>
+                        <input type="text" id="announce-patrimony" placeholder="Deixe em branco se N/A">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="announce-description">Descrição Detalhada</label>
+                    <textarea id="announce-description" rows="3" placeholder="Detalhes adicionais do item..."></textarea>
+                </div>
+
+                <hr>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-school">Nome da Escola/Unidade*</label>
+                        <input type="text" id="announce-school" required placeholder="Ex: E.E. Professor Silva">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="announce-location">Município/Localização*</label>
+                        <input type="text" id="announce-location" required placeholder="Ex: Centro / Cidade">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-contact-person">Responsável pelo Contato*</label>
+                        <input type="text" id="announce-contact-person" required placeholder="Ex: Maria (Diretora)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="announce-phone">Telefone/WhatsApp para Contato*</label>
+                        <input type="text" id="announce-phone" required placeholder="(00) 00000-0000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="announce-image">Foto do Item</label>
+                    <input type="file" id="announce-image" accept="image/*" onchange="handleImageCompress(event)">
+                </div>
+
+                <button type="submit" id="btn-submit" class="btn-primary">Publicar Item no Balcão</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
