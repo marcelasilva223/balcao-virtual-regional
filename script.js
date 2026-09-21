@@ -53,7 +53,7 @@ function handleImageCompress(event) {
     reader.readAsDataURL(file);
 }
 
-// Envia o formulário para o Google Apps Script[cite: 1]
+// Envia o formulário para o Google Apps Script
 async function handleAnnounceSubmit(e) {
     e.preventDefault();
 
@@ -78,9 +78,13 @@ async function handleAnnounceSubmit(e) {
     };
 
     try {
+        // Envio no formato no-cors para garantir que o Google receba sem bloquear
         await fetch(API_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(newItem)
         });
 
@@ -88,7 +92,7 @@ async function handleAnnounceSubmit(e) {
         document.getElementById('form-announce').reset();
         selectedImageBase64 = "";
         switchTab('catalog');
-        setTimeout(loadFromGoogleSheets, 1500); 
+        setTimeout(loadFromGoogleSheets, 2000); 
     } catch (error) {
         alert('Ocorreu um erro ao salvar o item.');
         console.error(error);
@@ -97,7 +101,6 @@ async function handleAnnounceSubmit(e) {
         submitBtn.innerText = "Publicar Item no Balcão";
     }
 }
-
 // Busca os itens na planilha via GET
 async function loadFromGoogleSheets() {
     const loadingEl = document.getElementById('loading');
