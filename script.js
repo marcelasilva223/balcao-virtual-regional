@@ -1,5 +1,5 @@
 // ATENÇÃO: Cole aqui a URL gerada pelo seu Apps Script (deve terminar em /exec)
-const API_URL = "COLE_SUA_URL_DO_APPS_SCRIPT_AQUI";
+const API_URL = "https://script.google.com/a/macros/educacao.mg.gov.br/s/AKfycbzknbxRY-GN4mvrGcJ7_rlzkKcGb_WXjim48ctaUGRWfab1v0OyGbiqNkgbqPEje8Dn7Q/exec";
 
 let allItems = [];
 let selectedImageBase64 = "";
