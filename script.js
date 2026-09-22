@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadFromGoogleSheets();
 });
 
-// Alterna entre as abas do sistema
+// Alterna entre as abas
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
     document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -44,7 +44,7 @@ function toggleMobileMenu() {
     }
 }
 
-// Compacta a imagem antes de enviar para não exceder limites do Google Sheets
+// Compacta e converte a imagem selecionada
 function handleImageSelect(event) {
     const file = event.target.files[0];
     if (!file) {
@@ -74,7 +74,6 @@ function handleImageSelect(event) {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             selectedImageBase64 = canvas.toDataURL("image/jpeg", 0.6);
 
-            // Atualiza Pré-visualização na tela
             const preview = document.getElementById('image-preview');
             preview.src = selectedImageBase64;
             document.getElementById('image-preview-container').classList.remove('hidden');
@@ -140,7 +139,6 @@ async function handleAnnounceSubmit(e) {
 // Carregar Itens do Google Sheets
 async function loadFromGoogleSheets() {
     const gridEl = document.getElementById('items-grid');
-    const emptyState = document.getElementById('empty-state');
     
     if (!API_URL || API_URL.includes("COLE_AQUI_O_SEU_URL")) {
         gridEl.innerHTML = `<p class="col-span-full text-center text-red-500 py-8">⚠️ Configure a URL do Google Apps Script no ficheiro script.js.</p>`;
@@ -159,7 +157,7 @@ async function loadFromGoogleSheets() {
     }
 }
 
-// Filtragem
+// Filtros
 function applyFilters() {
     const searchTerm = document.getElementById('filter-search').value.toLowerCase();
     const categoryTerm = document.getElementById('filter-category').value;
