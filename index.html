@@ -3,62 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduReuso Virtual - Transferência de Bens</title>
-    <!-- CSS Externo -->
+    <title>EduReuso Virtual - Balcão de Transferência de Bens</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <header class="header">
-        <div class="header-content">
-            <i class="fa-solid fa-recycle logo-icon"></i>
-            <div>
-                <h1>EduReuso Virtual</h1>
-                <p>Balcão de Transferência de Bens Móveis Escolares</p>
+    <!-- Header / Barra de Navegação -->
+    <header class="top-navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-recycle"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>EduReuso Virtual</h1>
+                    <p>Balcão de Transferência de Bens Móveis Escolares</p>
+                </div>
             </div>
+
+            <nav class="nav-menu">
+                <button id="tab-catalog-btn" class="nav-btn active" onclick="switchTab('catalog')">
+                    <i class="fa-solid fa-border-all"></i> Catálogo de Bens
+                </button>
+                <button id="tab-announce-btn" class="nav-btn" onclick="switchTab('announce')">
+                    <i class="fa-solid fa-plus-circle"></i> Anunciar Ocioso
+                </button>
+                <button class="nav-btn disabled">
+                    <i class="fa-solid fa-box-archive"></i> Solicitações <span class="badge-count">1</span>
+                </button>
+                <button class="nav-btn disabled">
+                    <i class="fa-solid fa-circle-info"></i> Como Usar Grátis
+                </button>
+            </nav>
         </div>
     </header>
 
-    <div class="container">
+    <main class="main-container">
         
-        <!-- Banner de Sustentabilidade -->
-        <div class="sustainability-banner">
-            <h2><i class="fa-solid fa-leaf"></i> Sustentabilidade na Gestão Pública</h2>
-            <p><strong>Reaproveite bens públicos antes de comprar novos.</strong></p>
-            <p>Facilite o remanejamento patrimonial entre escolas públicas municipais e estaduais. Economize recursos financeiros e promova o consumo consciente na administração pública.</p>
-        </div>
-
-        <!-- Navegação por Abas -->
-        <nav class="tabs-nav">
-            <button id="tab-catalog-btn" class="tab-btn active" onclick="switchTab('catalog')">
-                <i class="fa-solid fa-list-check"></i> Catálogo de Itens
-            </button>
-            <button id="tab-announce-btn" class="tab-btn" onclick="switchTab('announce')">
-                <i class="fa-solid fa-plus-circle"></i> Anunciar Item
-            </button>
-        </nav>
+        <!-- Banner de Destaque -->
+        <section class="hero-banner">
+            <div class="hero-content">
+                <span class="hero-tag">
+                    <i class="fa-solid fa-leaf"></i> SUSTENTABILIDADE NA GESTÃO PÚBLICA
+                </span>
+                <h2>Reaproveite bens públicos antes de comprar novos.</h2>
+                <p>Facilite o remanejamento patrimonial entre escolas públicas municipais e estaduais. Economize recursos financeiros e promova o consumo consciente na administração pública.</p>
+            </div>
+            <div class="hero-bg-icon">
+                <i class="fa-solid fa-school-flag"></i>
+            </div>
+        </section>
 
         <!-- ABA 1: CATÁLOGO -->
         <section id="tab-catalog" class="tab-content active">
-            <div class="search-container">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="search-input" placeholder="Buscar por item, escola, município ou patrimônio..." oninput="filterItems()">
+            
+            <!-- Painel de Filtros -->
+            <div class="filters-card">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="search-input">Buscar Item</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="search-input" placeholder="Ex: Projetor, Cadeira, Tombo..." oninput="filterItems()">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-category">Categoria</label>
+                        <select id="filter-category" onchange="filterItems()">
+                            <option value="">Todas as Categorias</option>
+                            <option value="Tecnologia / Informática">Tecnologia / Informática</option>
+                            <option value="Mobiliário">Mobiliário</option>
+                            <option value="Equipamento de Som / Áudio">Equipamento de Som / Áudio</option>
+                            <option value="Eletrodomésticos">Eletrodomésticos</option>
+                            <option value="Material Didático / Esportivo">Material Didático / Esportivo</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-condition">Estado de Conservação</label>
+                        <select id="filter-condition" onchange="filterItems()">
+                            <option value="">Todos os Estados</option>
+                            <option value="Novo / Sem Uso">Novo / Sem Uso</option>
+                            <option value="Usado - Bom Estado">Usado - Bom Estado</option>
+                            <option value="Usado - Marcado de Uso">Usado - Marcado de Uso</option>
+                            <option value="Necessita Reparo">Necessita Reparo</option>
+                            <option value="Inservível / Sucata">Inservível / Sucata</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-status">Status de Disponibilidade</label>
+                        <select id="filter-status" onchange="filterItems()">
+                            <option value="">Todos os Status</option>
+                            <option value="Disponível">Disponível</option>
+                            <option value="Em Solicitação">Em Solicitação</option>
+                            <option value="Transferido">Transferido</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filters-footer">
+                    <span id="item-counter" class="item-count">Mostrando 0 item(ns)</span>
+                    <button type="button" class="btn-clear-filters" onclick="clearFilters()">
+                        <i class="fa-solid fa-rotate-right"></i> Limpar Filtros
+                    </button>
+                </div>
             </div>
 
+            <!-- Loader -->
             <div id="loading" class="loading-spinner">
                 <i class="fa-solid fa-circle-notch fa-spin"></i>
                 <p>Carregando itens do balcão...</p>
             </div>
 
+            <!-- Grid de Cards -->
             <div id="catalog-list" class="catalog-grid"></div>
         </section>
 
         <!-- ABA 2: FORMULÁRIO -->
         <section id="tab-announce" class="tab-content">
             <div class="form-card">
-                <h2><i class="fa-solid fa-pen-to-square"></i> Cadastrar Novo Item</h2>
+                <h2><i class="fa-solid fa-pen-to-square"></i> Cadastrar Novo Item Ocioso</h2>
                 <p class="form-subtitle">Preencha os dados abaixo para disponibilizar um bem para as outras escolas da rede.</p>
 
                 <form id="form-announce" onsubmit="handleAnnounceSubmit(event)">
@@ -66,7 +134,7 @@
                     
                     <div class="form-group">
                         <label for="announce-title">Título do Item *</label>
-                        <input type="text" id="announce-title" required placeholder="Ex: Carteira Escolar Padrão / Projetor Epson">
+                        <input type="text" id="announce-title" required placeholder="Ex: Conjunto de 25 Carteiras / Projetor Epson">
                     </div>
 
                     <div class="form-row">
@@ -79,7 +147,6 @@
                                 <option value="Equipamento de Som / Áudio">Equipamento de Som / Áudio</option>
                                 <option value="Eletrodomésticos">Eletrodomésticos</option>
                                 <option value="Material Didático / Esportivo">Material Didático / Esportivo</option>
-                                <option value="Veículos">Veículos</option>
                                 <option value="Outros">Outros</option>
                             </select>
                         </div>
@@ -118,12 +185,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="announce-school">Órgão / Escola *</label>
-                            <input type="text" id="announce-school" required placeholder="Ex: E.E. Nome da Escola">
+                            <input type="text" id="announce-school" required placeholder="Ex: E.M. Professora Maria Silva">
                         </div>
 
                         <div class="form-group">
-                            <label for="announce-location">Município *</label>
-                            <input type="text" id="announce-location" required placeholder="Ex: Belo Horizonte / MG">
+                            <label for="announce-location">Bairro / Município *</label>
+                            <input type="text" id="announce-location" required placeholder="Ex: Bairro Santo Antônio">
                         </div>
                     </div>
 
@@ -151,7 +218,7 @@
                 </form>
             </div>
         </section>
-    </div>
+    </main>
 
     <script src="script.js"></script>
 </body>
