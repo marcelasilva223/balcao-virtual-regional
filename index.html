@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduReuso Virtual - Balcão de Transferência de Bens</title>
     <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome para os ícones da interface -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header / Barra de Navegação -->
+
+    <!-- Cabeçalho e Navegação Principal -->
     <header class="top-navbar">
         <div class="nav-container">
             <div class="brand">
@@ -22,25 +24,23 @@
             </div>
 
             <nav class="nav-menu">
-                <button id="tab-catalog-btn" class="nav-btn active" onclick="switchTab('catalog')">
+                <button id="tab-catalog-btn" class="nav-btn" onclick="switchTab('catalog')">
                     <i class="fa-solid fa-border-all"></i> Catálogo de Bens
                 </button>
                 <button id="tab-announce-btn" class="nav-btn" onclick="switchTab('announce')">
                     <i class="fa-solid fa-plus-circle"></i> Anunciar Ocioso
                 </button>
-                <button id="tab-requests-btn" class="nav-btn" onclick="switchTab('requests')">
-                    <i class="fa-solid fa-box-archive"></i> Solicitações <span id="requests-badge-count" class="badge-count">0</span>
-                </button>
-                <button class="nav-btn disabled">
-                    <i class="fa-solid fa-circle-info"></i> Como Usar Grátis
+                <button id="tab-requests-btn" class="nav-btn active" onclick="switchTab('requests')">
+                    <i class="fa-solid fa-box-archive"></i> Solicitações <span id="requests-badge-count" class="badge-count">1</span>
                 </button>
             </nav>
         </div>
     </header>
 
+    <!-- Conteúdo Principal -->
     <main class="main-container">
         
-        <!-- Banner de Destaque -->
+        <!-- Banner Institucional -->
         <section class="hero-banner">
             <div class="hero-content">
                 <span class="hero-tag">
@@ -54,10 +54,8 @@
             </div>
         </section>
 
-        <!-- ABA 1: CATÁLOGO -->
-        <section id="tab-catalog" class="tab-content active">
-            
-            <!-- Painel de Filtros -->
+        <!-- ABA 1: CATÁLOGO DE BENS -->
+        <section id="tab-catalog" class="tab-content">
             <div class="filters-card">
                 <div class="filters-grid">
                     <div class="filter-group">
@@ -112,17 +110,15 @@
                 </div>
             </div>
 
-            <!-- Loader -->
             <div id="loading" class="loading-spinner">
                 <i class="fa-solid fa-circle-notch fa-spin"></i>
                 <p>Carregando itens do balcão...</p>
             </div>
 
-            <!-- Grid de Cards -->
             <div id="catalog-list" class="catalog-grid"></div>
         </section>
 
-        <!-- ABA 2: FORMULÁRIO -->
+        <!-- ABA 2: FORMULÁRIO DE ANÚNCIO -->
         <section id="tab-announce" class="tab-content">
             <div class="form-card">
                 <h2><i class="fa-solid fa-pen-to-square"></i> Cadastrar Novo Item Ocioso</h2>
@@ -218,8 +214,8 @@
             </div>
         </section>
 
-        <!-- ABA 3: SOLICITAÇÕES -->
-        <section id="tab-requests" class="tab-content">
+        <!-- ABA 3: SOLICITAÇÕES (HISTÓRICO SIMPLIFICADO) -->
+        <section id="tab-requests" class="tab-content active">
             <div class="requests-card">
                 <div class="requests-header">
                     <div>
@@ -244,14 +240,16 @@
                             </tr>
                         </thead>
                         <tbody id="requests-table-body">
-                            <!-- Inserido dinamicamente via JS -->
+                            <!-- Preenchido dinamicamente pelo script.js -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
+
     </main>
 
+    <!-- Script da Aplicação -->
     <script src="script.js"></script>
 </body>
 </html>
