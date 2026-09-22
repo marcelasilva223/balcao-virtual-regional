@@ -2,8 +2,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyBCtztXvxazxFrRezp2IAJ
 
 let allItems = [];
 let selectedImageBase64 = "";
+let currentSelectedItem = null; // Item selecionado para a modal
 
-// Dados Iniciais de Exemplo para a tabela de solicitações (caso localStorage esteja vazio)
+// Dados padrão iniciais
 const DEFAULT_REQUESTS = [
     {
         id: "req-1001",
@@ -21,10 +22,18 @@ document.addEventListener("DOMContentLoaded", () => {
     initRequestsStorage();
     loadFromGoogleSheets();
     renderRequestsTable();
+
+    // Fechar a modal ao clicar no fundo escuro/desfocado
+    const modalOverlay = document.getElementById('modal-details');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+    }
 });
 
 /* ==========================================================================
-   GERENCIAMENTO DE ABAS
+   NAVEGAÇÃO POR ABAS
    ========================================================================== */
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -42,7 +51,186 @@ function switchTab(tabName) {
 }
 
 /* ==========================================================================
-   IMAGEM E CADASTRO (ENVIO)
+   CARREGAMENTO E EXIBIÇÃO DO CATÁLOGO
+   ========================================================================== */
+async function loadFromGoogleSheets() {
+    const loadingEl = document.getElementById('loading');
+    const catalogEl = document.getElementById('catalog-list');
+
+    if (!API_URL || API_URL.includes("COLE_SUA_URL")) {
+        loadingEl.innerHTML = "<p>⚠️ Configure a URL do Google Apps Script no script.js.</p>";
+        return;
+    }
+
+    loadingEl.style.display = "block";
+    catalogEl.innerHTML = "";
+
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        allItems = Array.isArray(data) ? data : [];
+        loadingEl.style.display = "none";
+        filterItems();
+    } catch (error) {
+        loadingEl.innerHTML = "<p>Erro ao carregar dados do balcão.</p>";
+        console.error(error);
+    }
+}
+
+function renderCatalog(items) {
+    const catalogEl = document.getElementById('catalog-list');
+    const counterEl = document.getElementById('item-counter');
+    catalogEl.innerHTML = "";
+
+    if (counterEl) {
+        counterEl.textContent = `Mostrando ${items ? items.length : 0} item(ns)`;
+    }
+
+    if (!Array.isArray(items) || items.length === 0) {
+        catalogEl.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;'>Nenhum item encontrado.</p>";
+        return;
+    }
+
+    items.slice().reverse().forEach(item => {
+        const imgSource = item.image || 'https://via.placeholder.com/400x250?text=Sem+Imagem';
+        const statusText = item.status || 'Disponível';
+        let statusClass = 'disponivel';
+        
+        if (statusText.toLowerCase().includes('solicita')) statusClass = 'solicitacao';
+        else if (statusText.toLowerCase().includes('transf')) statusClass = 'transferido';
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="card-img-container">
+                <img src="${imgSource}" alt="${item.title || 'Item'}">
+                <span class="badge-status ${statusClass}">${statusText}</span>
+                <span class="badge-category">${item.category || 'Geral'}</span>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">${item.title || 'Sem título'}</h3>
+                <div class="card-location-info">
+                    <p><i class="fa-solid fa-school"></i> ${item.school || 'Não informado'}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> ${item.location || 'Não informado'}</p>
+                </div>
+                <div class="card-meta-row">
+                    <span><strong>Qtd:</strong> ${item.quantity || 1}</span>
+                    <span><strong>Estado:</strong> ${item.condition || 'Não informado'}</span>
+                </div>
+                <button class="btn-card-action" onclick="openModal('${item.id}')">
+                    <i class="fa-solid fa-circle-info"></i> Ver detalhes e Solicitar
+                </button>
+            </div>
+        `;
+        catalogEl.appendChild(card);
+    });
+}
+
+function filterItems() {
+    const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+    const category = document.getElementById('filter-category')?.value || '';
+    const condition = document.getElementById('filter-condition')?.value || '';
+    const status = document.getElementById('filter-status')?.value || '';
+
+    const filtered = allItems.filter(item => {
+        const title = String(item.title || '').toLowerCase();
+        const school = String(item.school || '').toLowerCase();
+        const location = String(item.location || '').toLowerCase();
+        const patrimony = String(item.patrimony || '').toLowerCase();
+
+        const matchesSearch = !search || title.includes(search) || school.includes(search) || location.includes(search) || patrimony.includes(search);
+        const matchesCategory = !category || item.category === category;
+        const matchesCondition = !condition || item.condition === condition;
+        const matchesStatus = !status || item.status === status;
+
+        return matchesSearch && matchesCategory && matchesCondition && matchesStatus;
+    });
+
+    renderCatalog(filtered);
+}
+
+function clearFilters() {
+    if (document.getElementById('search-input')) document.getElementById('search-input').value = '';
+    if (document.getElementById('filter-category')) document.getElementById('filter-category').value = '';
+    if (document.getElementById('filter-condition')) document.getElementById('filter-condition').value = '';
+    if (document.getElementById('filter-status')) document.getElementById('filter-status').value = '';
+    renderCatalog(allItems);
+}
+
+/* ==========================================================================
+   AÇÕES DA JANELA MODAL (VER DETALHES E SOLICITAR)
+   ========================================================================== */
+function openModal(itemId) {
+    const item = allItems.find(i => String(i.id) === String(itemId));
+    if (!item) return;
+
+    currentSelectedItem = item;
+
+    // Preenche as informações no Modal
+    document.getElementById('modal-category-badge').textContent = item.category || 'Geral';
+    document.getElementById('modal-item-title').textContent = item.title || 'Sem título';
+    document.getElementById('modal-school').textContent = item.school || 'Não informado';
+    document.getElementById('modal-location').textContent = item.location || 'Não informado';
+    document.getElementById('modal-quantity').textContent = item.quantity || '1';
+    document.getElementById('modal-condition').textContent = item.condition || 'Não informado';
+    document.getElementById('modal-patrimony').textContent = item.patrimony || 'Não possui / S/N';
+    document.getElementById('modal-contact-person').textContent = item.contactPerson || 'Não informado';
+    document.getElementById('modal-contact-phone').textContent = item.phone || 'Não informado';
+    document.getElementById('modal-item-description').textContent = item.description || 'Sem descrição informada.';
+    
+    const imgEl = document.getElementById('modal-item-image');
+    imgEl.src = item.image || 'https://via.placeholder.com/400x250?text=Sem+Imagem';
+
+    // Limpa o formulário dentro da modal
+    document.getElementById('form-modal-request').reset();
+
+    // Exibe o modal
+    const modalEl = document.getElementById('modal-details');
+    if (modalEl) modalEl.classList.add('active');
+}
+
+function closeModal() {
+    const modalEl = document.getElementById('modal-details');
+    if (modalEl) modalEl.classList.remove('active');
+    currentSelectedItem = null;
+}
+
+function handleModalSubmit(e) {
+    e.preventDefault();
+
+    if (!currentSelectedItem) return;
+
+    const schoolName = document.getElementById('req-school').value;
+    const responsible = document.getElementById('req-responsible').value;
+    const email = document.getElementById('req-email').value;
+    const phone = document.getElementById('req-phone').value;
+    const justification = document.getElementById('req-justification').value;
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const newRequest = {
+        id: "req-" + Date.now(),
+        itemTitle: currentSelectedItem.title,
+        patrimony: currentSelectedItem.patrimony || "S/N",
+        solicitaireSchool: schoolName,
+        solicitaireContact: `${responsible} (${phone} / ${email})`,
+        donorSchool: currentSelectedItem.school || "Escola Doadora",
+        date: today,
+        status: "Pendente",
+        justification: justification
+    };
+
+    const requests = getStoredRequests();
+    requests.unshift(newRequest);
+    saveRequests(requests);
+
+    closeModal();
+    alert("✅ Solicitação de transferência realizada com sucesso!");
+    switchTab('requests');
+}
+
+/* ==========================================================================
+   CADASTRO DE NOVOS ITENS (ABA ANUNCIAR)
    ========================================================================== */
 function handleImageCompress(event) {
     const file = event.target.files[0];
@@ -57,7 +245,6 @@ function handleImageCompress(event) {
         img.onload = () => {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
-            
             const maxWidth = 350;
             const scaleSize = maxWidth / img.width;
 
@@ -107,13 +294,13 @@ async function handleAnnounceSubmit(e) {
             body: JSON.stringify(newItem)
         });
 
-        alert('✅ Item publicado no Balcão com sucesso!');
+        alert('✅ Item publicado com sucesso!');
         document.getElementById('form-announce').reset();
         selectedImageBase64 = "";
         switchTab('catalog');
         setTimeout(loadFromGoogleSheets, 1500);
     } catch (error) {
-        alert('Ocorreu um erro ao salvar o item.');
+        alert('Erro ao salvar item.');
         console.error(error);
     } finally {
         submitBtn.disabled = false;
@@ -122,124 +309,7 @@ async function handleAnnounceSubmit(e) {
 }
 
 /* ==========================================================================
-   CARREGAMENTO E FILTROS DO CATÁLOGO
-   ========================================================================== */
-async function loadFromGoogleSheets() {
-    const loadingEl = document.getElementById('loading');
-    const catalogEl = document.getElementById('catalog-list');
-
-    if (!API_URL || API_URL.includes("COLE_SUA_URL")) {
-        loadingEl.innerHTML = "<p>⚠️ Configure a URL do Google Apps Script no arquivo script.js.</p>";
-        return;
-    }
-
-    loadingEl.style.display = "block";
-    catalogEl.innerHTML = "";
-
-    try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        
-        if (Array.isArray(data)) {
-            allItems = data;
-        } else {
-            allItems = [];
-        }
-        
-        loadingEl.style.display = "none";
-        filterItems();
-    } catch (error) {
-        loadingEl.innerHTML = "<p>Erro ao conectar com a base de dados do Google Sheets.</p>";
-        console.error(error);
-    }
-}
-
-function renderCatalog(items) {
-    const catalogEl = document.getElementById('catalog-list');
-    const counterEl = document.getElementById('item-counter');
-    catalogEl.innerHTML = "";
-
-    if (counterEl) {
-        counterEl.textContent = `Mostrando ${items ? items.length : 0} item(ns)`;
-    }
-
-    if (!Array.isArray(items) || items.length === 0) {
-        catalogEl.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;'>Nenhum item encontrado com os filtros selecionados.</p>";
-        return;
-    }
-
-    items.slice().reverse().forEach(item => {
-        const imgSource = item.image || 'https://via.placeholder.com/400x250?text=Sem+Imagem';
-        
-        const statusText = item.status || 'Disponível';
-        let statusClass = 'disponivel';
-        if (statusText.toLowerCase().includes('solicita')) {
-            statusClass = 'solicitacao';
-        } else if (statusText.toLowerCase().includes('transf')) {
-            statusClass = 'transferido';
-        }
-
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-            <div class="card-img-container">
-                <img src="${imgSource}" alt="${item.title || 'Item'}">
-                <span class="badge-status ${statusClass}">${statusText}</span>
-                <span class="badge-category">${item.category || 'Geral'}</span>
-            </div>
-            <div class="card-body">
-                <h3 class="card-title">${item.title || 'Sem título'}</h3>
-                <div class="card-location-info">
-                    <p><i class="fa-solid fa-school"></i> ${item.school || 'Escola não informada'}</p>
-                    <p><i class="fa-solid fa-location-dot"></i> ${item.location || 'Localização não informada'}</p>
-                </div>
-                <div class="card-meta-row">
-                    <span><strong>Qtd:</strong> ${item.quantity || 1}</span>
-                    <span><strong>Estado:</strong> ${item.condition || 'Não informado'}</span>
-                </div>
-                <button class="btn-card-action" onclick="requestItemFlow('${item.title || ''}', '${item.patrimony || 'S/N'}', '${item.school || ''}')">
-                    <i class="fa-solid fa-circle-info"></i> Ver Detalhes e Solicitar
-                </button>
-            </div>
-        `;
-        catalogEl.appendChild(card);
-    });
-}
-
-function filterItems() {
-    const search = (document.getElementById('search-input')?.value || '').toLowerCase();
-    const category = document.getElementById('filter-category')?.value || '';
-    const condition = document.getElementById('filter-condition')?.value || '';
-    const status = document.getElementById('filter-status')?.value || '';
-
-    const filtered = allItems.filter(item => {
-        const title = String(item.title || '').toLowerCase();
-        const school = String(item.school || '').toLowerCase();
-        const location = String(item.location || '').toLowerCase();
-        const patrimony = String(item.patrimony || '').toLowerCase();
-
-        const matchesSearch = !search || title.includes(search) || school.includes(search) || location.includes(search) || patrimony.includes(search);
-        const matchesCategory = !category || item.category === category;
-        const matchesCondition = !condition || item.condition === condition;
-        const matchesStatus = !status || item.status === status;
-
-        return matchesSearch && matchesCategory && matchesCondition && matchesStatus;
-    });
-
-    renderCatalog(filtered);
-}
-
-function clearFilters() {
-    if (document.getElementById('search-input')) document.getElementById('search-input').value = '';
-    if (document.getElementById('filter-category')) document.getElementById('filter-category').value = '';
-    if (document.getElementById('filter-condition')) document.getElementById('filter-condition').value = '';
-    if (document.getElementById('filter-status')) document.getElementById('filter-status').value = '';
-    
-    renderCatalog(allItems);
-}
-
-/* ==========================================================================
-   ABA DE SOLICITAÇÕES E PERSISTÊNCIA EM LOCALSTORAGE
+   HISTÓRICO E ARMAZENAMENTO LOCAL (SOLICITAÇÕES)
    ========================================================================== */
 function initRequestsStorage() {
     if (!localStorage.getItem('edureuso_requests')) {
@@ -267,7 +337,6 @@ function renderRequestsTable() {
 
     const requests = getStoredRequests();
     
-    // Atualiza o contador na aba
     if (badgeEl) {
         const pendingCount = requests.filter(r => r.status === 'Pendente').length;
         badgeEl.textContent = pendingCount;
@@ -288,7 +357,6 @@ function renderRequestsTable() {
 
     requests.forEach(req => {
         const tr = document.createElement('tr');
-
         const isPendente = req.status === 'Pendente';
         const statusClass = isPendente ? 'pendente' : 'concluido';
         const actionBtn = isPendente 
@@ -317,36 +385,6 @@ function renderRequestsTable() {
     });
 }
 
-// Cria uma nova solicitação a partir do clique no card
-function requestItemFlow(itemTitle, patrimony, donorSchool) {
-    const requestingSchool = prompt(`Solicitação do item: "${itemTitle}"\n\nInforme o nome da sua escola (Solicitante):`);
-    if (!requestingSchool) return;
-
-    const contactName = prompt("Informe seu nome e telefone/WhatsApp de contato:");
-    if (!contactName) return;
-
-    const today = new Date().toISOString().split('T')[0];
-
-    const newRequest = {
-        id: "req-" + Date.now(),
-        itemTitle: itemTitle,
-        patrimony: patrimony,
-        solicitaireSchool: requestingSchool,
-        solicitaireContact: contactName,
-        donorSchool: donorSchool || "Escola Doadora",
-        date: today,
-        status: "Pendente"
-    };
-
-    const requests = getStoredRequests();
-    requests.unshift(newRequest);
-    saveRequests(requests);
-
-    alert("✅ Solicitação de transferência registrada com sucesso!\nVocê pode acompanhá-la na aba 'Solicitações'.");
-    switchTab('requests');
-}
-
-// Conclui a transferência
 function completeRequest(reqId) {
     if (!confirm("Deseja marcar esta transferência como concluída?")) return;
 
