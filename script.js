@@ -29,7 +29,8 @@ function handleImageCompress(event) {
         img.onload = () => {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
-            const maxWidth = 500;
+            
+            const maxWidth = 350;
             const scaleSize = maxWidth / img.width;
 
             if (scaleSize < 1) {
@@ -41,14 +42,13 @@ function handleImageCompress(event) {
             }
 
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            selectedImageBase64 = canvas.toDataURL("image/jpeg", 0.6);
+            selectedImageBase64 = canvas.toDataURL("image/jpeg", 0.4);
         };
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
 }
 
-// Envio em formato seguro (evita travamentos de CORS)
 async function handleAnnounceSubmit(e) {
     e.preventDefault();
 
@@ -60,7 +60,7 @@ async function handleAnnounceSubmit(e) {
         id: Date.now().toString(),
         title: document.getElementById('announce-title').value,
         category: document.getElementById('announce-category').value,
-        quantity: parseInt(document.getElementById('announce-quantity').value),
+        quantity: parseInt(document.getElementById('announce-quantity').value, 10) || 1,
         condition: document.getElementById('announce-condition').value,
         patrimony: document.getElementById('announce-patrimony').value || 'S/N',
         description: document.getElementById('announce-description').value,
@@ -73,17 +73,17 @@ async function handleAnnounceSubmit(e) {
     };
 
     try {
-     await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(newItem)
-    });
+        await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(newItem)
+        });
 
         alert('✅ Item publicado no Balcão com sucesso!');
         document.getElementById('form-announce').reset();
         selectedImageBase64 = "";
         switchTab('catalog');
-        setTimeout(loadFromGoogleSheets, 2000);
+        setTimeout(loadFromGoogleSheets, 1500);
     } catch (error) {
         alert('Ocorreu um erro ao salvar o item.');
         console.error(error);
@@ -107,7 +107,14 @@ async function loadFromGoogleSheets() {
 
     try {
         const response = await fetch(API_URL);
-        allItems = await response.json();
+        const data = await response.json();
+        
+        if (Array.isArray(data)) {
+            allItems = data;
+        } else {
+            allItems = [];
+            console.error("A resposta da API não é uma lista válida:", data);
+        }
         
         loadingEl.style.display = "none";
         renderCatalog(allItems);
@@ -121,7 +128,7 @@ function renderCatalog(items) {
     const catalogEl = document.getElementById('catalog-list');
     catalogEl.innerHTML = "";
 
-    if (!items || items.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         catalogEl.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;'>Nenhum item disponível no momento.</p>";
         return;
     }
@@ -133,18 +140,18 @@ function renderCatalog(items) {
         card.className = 'card';
         card.innerHTML = `
             <div class="card-img-container">
-                <img src="${imgSource}" alt="${item.title}">
+                <img src="${imgSource}" alt="${item.title || 'Item'}">
                 <span class="card-badge">${item.category || 'Geral'}</span>
             </div>
             <div class="card-body">
-                <h3 class="card-title">${item.title}</h3>
+                <h3 class="card-title">${item.title || 'Sem título'}</h3>
                 <ul class="card-info-list">
-                    <li><i class="fa-solid fa-boxes-stacked"></i> <strong>Qtd:</strong> ${item.quantity} un.</li>
-                    <li><i class="fa-solid fa-circle-check"></i> <strong>Estado:</strong> ${item.condition}</li>
-                    <li><i class="fa-solid fa-barcode"></i> <strong>Patrimônio:</strong> ${item.patrimony}</li>
-                    <li><i class="fa-solid fa-school"></i> <strong>Escola:</strong> ${item.school}</li>
-                    <li><i class="fa-solid fa-location-dot"></i> <strong>Local:</strong> ${item.location}</li>
-                    <li><i class="fa-solid fa-phone"></i> <strong>Contato:</strong> ${item.contactPerson} (${item.phone})</li>
+                    <li><i class="fa-solid fa-boxes-stacked"></i> <strong>Qtd:</strong> ${item.quantity || 1} un.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> <strong>Estado:</strong> ${item.condition || ''}</li>
+                    <li><i class="fa-solid fa-barcode"></i> <strong>Patrimônio:</strong> ${item.patrimony || 'S/N'}</li>
+                    <li><i class="fa-solid fa-school"></i> <strong>Escola:</strong> ${item.school || ''}</li>
+                    <li><i class="fa-solid fa-location-dot"></i> <strong>Local:</strong> ${item.location || ''}</li>
+                    <li><i class="fa-solid fa-phone"></i> <strong>Contato:</strong> ${item.contactPerson || ''} (${item.phone || ''})</li>
                 </ul>
                 ${item.description ? `<div class="card-description">${item.description}</div>` : ''}
             </div>
@@ -156,12 +163,18 @@ function renderCatalog(items) {
 function filterItems() {
     const query = document.getElementById('search-input').value.toLowerCase();
     const filtered = allItems.filter(item => {
+        const title = String(item.title || '').toLowerCase();
+        const school = String(item.school || '').toLowerCase();
+        const category = String(item.category || '').toLowerCase();
+        const location = String(item.location || '').toLowerCase();
+        const patrimony = String(item.patrimony || '').toLowerCase();
+
         return (
-            (item.title && item.title.toLowerCase().includes(query)) ||
-            (item.school && item.school.toLowerCase().includes(query)) ||
-            (item.category && item.category.toLowerCase().includes(query)) ||
-            (item.location && item.location.toLowerCase().includes(query)) ||
-            (item.patrimony && item.patrimony.toString().toLowerCase().includes(query))
+            title.includes(query) ||
+            school.includes(query) ||
+            category.includes(query) ||
+            location.includes(query) ||
+            patrimony.includes(query)
         );
     });
     renderCatalog(filtered);
