@@ -24,14 +24,14 @@
             </div>
 
             <nav class="nav-menu">
-                <button id="tab-catalog-btn" class="nav-btn" onclick="switchTab('catalog')">
+                <button id="tab-catalog-btn" class="nav-btn active" onclick="switchTab('catalog')">
                     <i class="fa-solid fa-border-all"></i> Catálogo de Bens
                 </button>
                 <button id="tab-announce-btn" class="nav-btn" onclick="switchTab('announce')">
                     <i class="fa-solid fa-plus-circle"></i> Anunciar Ocioso
                 </button>
-                <button id="tab-requests-btn" class="nav-btn active" onclick="switchTab('requests')">
-                    <i class="fa-solid fa-box-archive"></i> Solicitações <span id="requests-badge-count" class="badge-count">1</span>
+                <button id="tab-requests-btn" class="nav-btn" onclick="switchTab('requests')">
+                    <i class="fa-solid fa-box-archive"></i> Solicitações <span id="requests-badge-count" class="badge-count">0</span>
                 </button>
             </nav>
         </div>
@@ -55,7 +55,7 @@
         </section>
 
         <!-- ABA 1: CATÁLOGO DE BENS -->
-        <section id="tab-catalog" class="tab-content">
+        <section id="tab-catalog" class="tab-content active">
             <div class="filters-card">
                 <div class="filters-grid">
                     <div class="filter-group">
@@ -215,7 +215,7 @@
         </section>
 
         <!-- ABA 3: SOLICITAÇÕES (HISTÓRICO SIMPLIFICADO) -->
-        <section id="tab-requests" class="tab-content active">
+        <section id="tab-requests" class="tab-content">
             <div class="requests-card">
                 <div class="requests-header">
                     <div>
@@ -248,6 +248,95 @@
         </section>
 
     </main>
+
+    <!-- MODAL DE DETALHES E SOLICITAÇÃO DE TRANSFERÊNCIA -->
+    <div id="modal-details" class="modal-overlay">
+        <div class="modal-container">
+            <!-- Cabeçalho do Modal -->
+            <div class="modal-header">
+                <span id="modal-category-badge" class="badge-category-modal">MOBILIÁRIO</span>
+                <button type="button" class="btn-close-modal" onclick="closeModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Corpo do Modal -->
+            <div class="modal-body">
+                <!-- Grid Superior: Imagem e Informações do Doador -->
+                <div class="modal-top-grid">
+                    <div class="modal-img-container">
+                        <img id="modal-item-image" src="" alt="Imagem do Item">
+                        <span id="modal-item-status" class="badge-status disponivel">Disponível</span>
+                    </div>
+
+                    <div class="modal-item-details">
+                        <h2 id="modal-item-title">Título do Item</h2>
+                        
+                        <div class="modal-info-list">
+                            <p><strong>Escola Responsável:</strong> <span id="modal-school">--</span></p>
+                            <p><strong>Localização/Bairro:</strong> <span id="modal-location">--</span></p>
+                            <p><strong>Quantidade:</strong> <span id="modal-quantity">--</span> unidade(s)</p>
+                            <p><strong>Estado de Conservação:</strong> <span id="modal-condition">--</span></p>
+                            <p><strong>Patrimônio/Tombo:</strong> <span id="modal-patrimony">--</span></p>
+                        </div>
+
+                        <div class="modal-contact-box">
+                            <h4><i class="fa-solid fa-address-card"></i> Contato Patrimônio Doador:</h4>
+                            <p><strong>Responsável:</strong> <span id="modal-contact-person">--</span></p>
+                            <p><strong>Tel/Zap:</strong> <span id="modal-contact-phone">--</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Descrição do Item -->
+                <div class="modal-section-box">
+                    <h3>DESCRIÇÃO DO ITEM</h3>
+                    <p id="modal-item-description">Sem descrição informada.</p>
+                </div>
+
+                <!-- Formulário de Solicitação -->
+                <form id="form-modal-request" onsubmit="handleModalSubmit(event)">
+                    <div class="modal-form-title">
+                        <i class="fa-solid fa-pen-to-square"></i> Formulário de Solicitação de Transferência
+                    </div>
+
+                    <div class="modal-form-row">
+                        <div class="form-group">
+                            <label for="req-school">Sua Escola Solicitante *</label>
+                            <input type="text" id="req-school" required placeholder="Ex: E.M. Paulo Freire">
+                        </div>
+                        <div class="form-group">
+                            <label for="req-responsible">Responsável / Cargo *</label>
+                            <input type="text" id="req-responsible" required placeholder="Ex: Ana Souza (Vice-Diretora)">
+                        </div>
+                    </div>
+
+                    <div class="modal-form-row">
+                        <div class="form-group">
+                            <label for="req-email">E-mail de Contato *</label>
+                            <input type="email" id="req-email" required placeholder="escola@educacao.gov.br">
+                        </div>
+                        <div class="form-group">
+                            <label for="req-phone">Telefone / WhatsApp *</label>
+                            <input type="text" id="req-phone" required placeholder="(31) 99999-0000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="req-justification">Justificativa da Necessidade *</label>
+                        <textarea id="req-justification" rows="3" required placeholder="Descreva brevemente por que a sua escola necessita deste mobiliário ou equipamento..."></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-modal-cancel" onclick="closeModal()">Fechar</button>
+                        <button type="submit" class="btn-modal-confirm">
+                            <i class="fa-solid fa-paper-plane"></i> Confirmar Solicitação
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Script da Aplicação -->
     <script src="script.js"></script>
