@@ -118,6 +118,10 @@ async function handleAnnounceSubmit(e) {
 
         alert('✅ Item publicado com sucesso no Google Sheets!');
         document.getElementById('form-announce').reset();
+        
+        const fileInput = document.getElementById('announce-image-file');
+        if (fileInput) fileInput.value = "";
+        
         selectedImageBase64 = "";
         document.getElementById('image-preview-container').classList.add('hidden');
         document.getElementById('image-placeholder-icon').classList.remove('hidden');
@@ -138,7 +142,7 @@ async function loadFromGoogleSheets() {
     const gridEl = document.getElementById('items-grid');
     const emptyState = document.getElementById('empty-state');
     
-    if (!API_URL || API_URL.includes("COLE_SUA_URL")) {
+    if (!API_URL || API_URL.includes("COLE_AQUI_O_SEU_URL")) {
         gridEl.innerHTML = `<p class="col-span-full text-center text-red-500 py-8">⚠️ Configure a URL do Google Apps Script no ficheiro script.js.</p>`;
         return;
     }
