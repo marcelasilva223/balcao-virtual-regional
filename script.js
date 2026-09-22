@@ -73,12 +73,11 @@ async function handleAnnounceSubmit(e) {
     };
 
     try {
-        await fetch(API_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newItem)
-        });
+     await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(newItem)
+    });
 
         alert('✅ Item publicado no Balcão com sucesso!');
         document.getElementById('form-announce').reset();
