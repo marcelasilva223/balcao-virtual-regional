@@ -2,9 +2,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyBCtztXvxazxFrRezp2IAJ
 
 let allItems = [];
 let selectedImageBase64 = "";
-let currentSelectedItem = null; // Item selecionado para a modal
+let currentSelectedItem = null;
 
-// Dados padrão iniciais
+// Dados padrão iniciais (Histórico estático para exibição)
 const DEFAULT_REQUESTS = [
     {
         id: "req-1001",
@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadFromGoogleSheets();
     renderRequestsTable();
 
-    // Fechar a modal ao clicar no fundo escuro/desfocado
     const modalOverlay = document.getElementById('modal-details');
     if (modalOverlay) {
         modalOverlay.addEventListener('click', (e) => {
@@ -166,7 +165,6 @@ function openModal(itemId) {
 
     currentSelectedItem = item;
 
-    // Preenche as informações no Modal
     document.getElementById('modal-category-badge').textContent = item.category || 'Geral';
     document.getElementById('modal-item-title').textContent = item.title || 'Sem título';
     document.getElementById('modal-school').textContent = item.school || 'Não informado';
@@ -181,10 +179,8 @@ function openModal(itemId) {
     const imgEl = document.getElementById('modal-item-image');
     imgEl.src = item.image || 'https://via.placeholder.com/400x250?text=Sem+Imagem';
 
-    // Limpa o formulário dentro da modal
     document.getElementById('form-modal-request').reset();
 
-    // Exibe o modal
     const modalEl = document.getElementById('modal-details');
     if (modalEl) modalEl.classList.add('active');
 }
@@ -309,7 +305,7 @@ async function handleAnnounceSubmit(e) {
 }
 
 /* ==========================================================================
-   HISTÓRICO E ARMAZENAMENTO LOCAL (SOLICITAÇÕES)
+   HISTÓRICO DE SOLICITAÇÕES (EXIBIÇÃO APENAS DE LEITURA)
    ========================================================================== */
 function initRequestsStorage() {
     if (!localStorage.getItem('edureuso_requests')) {
@@ -355,6 +351,7 @@ function renderRequestsTable() {
         return;
     }
 
+    // Renderiza cada linha como texto simples + selo de status (sem botões ou eventos de clique)
     requests.forEach(req => {
         const tr = document.createElement('tr');
         const isPendente = req.status === 'Pendente';
