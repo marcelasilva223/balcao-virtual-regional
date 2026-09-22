@@ -1,21 +1,49 @@
-// Substitua pela URL da sua implantação do Apps Script (terminada em /exec)
 const API_URL = "https://script.google.com/macros/s/AKfycbyBCtztXvxazxFrRezp2IAJJpQ_U4LMEkevxbrz34T7gyGJbbi4E5mAzmP059o5u4uNXQ/exec";
 
 let allItems = [];
 let selectedImageBase64 = "";
 
+// Dados Iniciais de Exemplo para a tabela de solicitações (caso localStorage esteja vazio)
+const DEFAULT_REQUESTS = [
+    {
+        id: "req-1001",
+        itemTitle: "Armário de Aço 2 Portas Reforçado",
+        patrimony: "PAT-2018-0045",
+        solicitaireSchool: "E.M. Cora Coralina",
+        solicitaireContact: "Luciana M. (Gestora) ((31) 98888-0011)",
+        donorSchool: "E.M. Tiradentes",
+        date: "2026-09-15",
+        status: "Pendente"
+    }
+];
+
 document.addEventListener("DOMContentLoaded", () => {
+    initRequestsStorage();
     loadFromGoogleSheets();
+    renderRequestsTable();
 });
 
+/* ==========================================================================
+   GERENCIAMENTO DE ABAS
+   ========================================================================== */
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
-    document.getElementById(`tab-${tabName}`).classList.add('active');
-    document.getElementById(`tab-${tabName}-btn`).classList.add('active');
+    const targetTab = document.getElementById(`tab-${tabName}`);
+    const targetBtn = document.getElementById(`tab-${tabName}-btn`);
+
+    if (targetTab) targetTab.classList.add('active');
+    if (targetBtn) targetBtn.classList.add('active');
+
+    if (tabName === 'requests') {
+        renderRequestsTable();
+    }
 }
 
+/* ==========================================================================
+   IMAGEM E CADASTRO (ENVIO)
+   ========================================================================== */
 function handleImageCompress(event) {
     const file = event.target.files[0];
     if (!file) {
@@ -93,6 +121,9 @@ async function handleAnnounceSubmit(e) {
     }
 }
 
+/* ==========================================================================
+   CARREGAMENTO E FILTROS DO CATÁLOGO
+   ========================================================================== */
 async function loadFromGoogleSheets() {
     const loadingEl = document.getElementById('loading');
     const catalogEl = document.getElementById('catalog-list');
@@ -113,7 +144,6 @@ async function loadFromGoogleSheets() {
             allItems = data;
         } else {
             allItems = [];
-            console.error("A resposta da API não é uma lista válida:", data);
         }
         
         loadingEl.style.display = "none";
@@ -141,7 +171,6 @@ function renderCatalog(items) {
     items.slice().reverse().forEach(item => {
         const imgSource = item.image || 'https://via.placeholder.com/400x250?text=Sem+Imagem';
         
-        // Define classe CSS de acordo com o status
         const statusText = item.status || 'Disponível';
         let statusClass = 'disponivel';
         if (statusText.toLowerCase().includes('solicita')) {
@@ -168,7 +197,7 @@ function renderCatalog(items) {
                     <span><strong>Qtd:</strong> ${item.quantity || 1}</span>
                     <span><strong>Estado:</strong> ${item.condition || 'Não informado'}</span>
                 </div>
-                <button class="btn-card-action" onclick="showItemDetails('${item.contactPerson || ''}', '${item.phone || ''}', '${item.title || ''}')">
+                <button class="btn-card-action" onclick="requestItemFlow('${item.title || ''}', '${item.patrimony || 'S/N'}', '${item.school || ''}')">
                     <i class="fa-solid fa-circle-info"></i> Ver Detalhes e Solicitar
                 </button>
             </div>
@@ -209,6 +238,122 @@ function clearFilters() {
     renderCatalog(allItems);
 }
 
-function showItemDetails(contactPerson, phone, itemTitle) {
-    alert(`📋 Solicitação do item: "${itemTitle}"\n\nResponsável: ${contactPerson || 'Não informado'}\nContato / WhatsApp: ${phone || 'Não informado'}`);
+/* ==========================================================================
+   ABA DE SOLICITAÇÕES E PERSISTÊNCIA EM LOCALSTORAGE
+   ========================================================================== */
+function initRequestsStorage() {
+    if (!localStorage.getItem('edureuso_requests')) {
+        localStorage.setItem('edureuso_requests', JSON.stringify(DEFAULT_REQUESTS));
+    }
+}
+
+function getStoredRequests() {
+    try {
+        return JSON.parse(localStorage.getItem('edureuso_requests')) || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveRequests(requests) {
+    localStorage.setItem('edureuso_requests', JSON.stringify(requests));
+    renderRequestsTable();
+}
+
+function renderRequestsTable() {
+    const tbody = document.getElementById('requests-table-body');
+    const badgeEl = document.getElementById('requests-badge-count');
+    if (!tbody) return;
+
+    const requests = getStoredRequests();
+    
+    // Atualiza o contador na aba
+    if (badgeEl) {
+        const pendingCount = requests.filter(r => r.status === 'Pendente').length;
+        badgeEl.textContent = pendingCount;
+    }
+
+    tbody.innerHTML = "";
+
+    if (requests.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; color: #64748b; padding: 2rem;">
+                    Nenhuma solicitação de transferência registrada até o momento.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    requests.forEach(req => {
+        const tr = document.createElement('tr');
+
+        const isPendente = req.status === 'Pendente';
+        const statusClass = isPendente ? 'pendente' : 'concluido';
+        const actionBtn = isPendente 
+            ? `<button class="btn-action-complete" onclick="completeRequest('${req.id}')">Concluir Transferência</button>`
+            : `<button class="btn-action-complete disabled" disabled>Transferido</button>`;
+
+        tr.innerHTML = `
+            <td>
+                <div class="item-main-title">${req.itemTitle}</div>
+                <div class="item-sub-patrimony">Tombo: ${req.patrimony || 'S/N'}</div>
+            </td>
+            <td>
+                <div class="school-main-title">${req.solicitaireSchool}</div>
+                <div class="school-sub-contact">${req.solicitaireContact}</div>
+            </td>
+            <td>${req.donorSchool}</td>
+            <td>${req.date}</td>
+            <td>
+                <span class="status-pill ${statusClass}">${req.status}</span>
+            </td>
+            <td style="text-align: right;">
+                ${actionBtn}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Cria uma nova solicitação a partir do clique no card
+function requestItemFlow(itemTitle, patrimony, donorSchool) {
+    const requestingSchool = prompt(`Solicitação do item: "${itemTitle}"\n\nInforme o nome da sua escola (Solicitante):`);
+    if (!requestingSchool) return;
+
+    const contactName = prompt("Informe seu nome e telefone/WhatsApp de contato:");
+    if (!contactName) return;
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const newRequest = {
+        id: "req-" + Date.now(),
+        itemTitle: itemTitle,
+        patrimony: patrimony,
+        solicitaireSchool: requestingSchool,
+        solicitaireContact: contactName,
+        donorSchool: donorSchool || "Escola Doadora",
+        date: today,
+        status: "Pendente"
+    };
+
+    const requests = getStoredRequests();
+    requests.unshift(newRequest);
+    saveRequests(requests);
+
+    alert("✅ Solicitação de transferência registrada com sucesso!\nVocê pode acompanhá-la na aba 'Solicitações'.");
+    switchTab('requests');
+}
+
+// Conclui a transferência
+function completeRequest(reqId) {
+    if (!confirm("Deseja marcar esta transferência como concluída?")) return;
+
+    const requests = getStoredRequests();
+    const item = requests.find(r => r.id === reqId);
+    if (item) {
+        item.status = "Concluído";
+        saveRequests(requests);
+    }
 }
