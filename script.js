@@ -14,7 +14,7 @@ const DEFAULT_REQUESTS = [
         solicitaireContact: "Luciana M. (Gestora) ((31) 98888-0011)",
         donorSchool: "E.M. Tiradentes",
         date: "2026-09-15",
-        status: "Pendente"
+        status: "Concluído"
     }
 ];
 
@@ -347,7 +347,7 @@ function renderRequestsTable() {
     if (requests.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align: center; color: #64748b; padding: 2rem;">
+                <td colspan="5" style="text-align: center; color: #64748b; padding: 2rem;">
                     Nenhuma solicitação de transferência registrada até o momento.
                 </td>
             </tr>
@@ -359,9 +359,6 @@ function renderRequestsTable() {
         const tr = document.createElement('tr');
         const isPendente = req.status === 'Pendente';
         const statusClass = isPendente ? 'pendente' : 'concluido';
-        const actionBtn = isPendente 
-            ? `<button class="btn-action-complete" onclick="completeRequest('${req.id}')">Concluir Transferência</button>`
-            : `<button class="btn-action-complete disabled" disabled>Transferido</button>`;
 
         tr.innerHTML = `
             <td>
@@ -377,21 +374,7 @@ function renderRequestsTable() {
             <td>
                 <span class="status-pill ${statusClass}">${req.status}</span>
             </td>
-            <td style="text-align: right;">
-                ${actionBtn}
-            </td>
         `;
         tbody.appendChild(tr);
     });
-}
-
-function completeRequest(reqId) {
-    if (!confirm("Deseja marcar esta transferência como concluída?")) return;
-
-    const requests = getStoredRequests();
-    const item = requests.find(r => r.id === reqId);
-    if (item) {
-        item.status = "Concluído";
-        saveRequests(requests);
-    }
 }
