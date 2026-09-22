@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balcão Virtual - Regional de Ensino</title>
+    <title>EduReuso Virtual - Transferência de Bens</title>
     <!-- CSS Externo -->
     <link rel="stylesheet" href="style.css">
     <!-- Ícones FontAwesome -->
@@ -13,15 +13,23 @@
 
     <header class="header">
         <div class="header-content">
-            <i class="fa-solid fa-boxes-packing logo-icon"></i>
+            <i class="fa-solid fa-recycle logo-icon"></i>
             <div>
-                <h1>Balcão Virtual</h1>
-                <p>Superintendência Regional de Ensino - Compartilhamento de Bens e Materiais</p>
+                <h1>EduReuso Virtual</h1>
+                <p>Balcão de Transferência de Bens Móveis Escolares</p>
             </div>
         </div>
     </header>
 
     <div class="container">
+        
+        <!-- Banner de Sustentabilidade -->
+        <div class="sustainability-banner">
+            <h2><i class="fa-solid fa-leaf"></i> Sustentabilidade na Gestão Pública</h2>
+            <p><strong>Reaproveite bens públicos antes de comprar novos.</strong></p>
+            <p>Facilite o remanejamento patrimonial entre escolas públicas municipais e estaduais. Economize recursos financeiros e promova o consumo consciente na administração pública.</p>
+        </div>
+
         <!-- Navegação por Abas -->
         <nav class="tabs-nav">
             <button id="tab-catalog-btn" class="tab-btn active" onclick="switchTab('catalog')">
@@ -51,14 +59,14 @@
         <section id="tab-announce" class="tab-content">
             <div class="form-card">
                 <h2><i class="fa-solid fa-pen-to-square"></i> Cadastrar Novo Item</h2>
-                <p class="form-subtitle">Preencha os dados abaixo para disponibilizar um bem para as outras escolas da regional.</p>
+                <p class="form-subtitle">Preencha os dados abaixo para disponibilizar um bem para as outras escolas da rede.</p>
 
                 <form id="form-announce" onsubmit="handleAnnounceSubmit(event)">
                     <div class="form-section-title">Dados do Item</div>
                     
                     <div class="form-group">
                         <label for="announce-title">Título do Item *</label>
-                        <input type="text" id="announce-title" required placeholder="Ex: Projetor Epson PowerLite X41">
+                        <input type="text" id="announce-title" required placeholder="Ex: Carteira Escolar Padrão / Projetor Epson">
                     </div>
 
                     <div class="form-row">
@@ -71,6 +79,7 @@
                                 <option value="Equipamento de Som / Áudio">Equipamento de Som / Áudio</option>
                                 <option value="Eletrodomésticos">Eletrodomésticos</option>
                                 <option value="Material Didático / Esportivo">Material Didático / Esportivo</option>
+                                <option value="Veículos">Veículos</option>
                                 <option value="Outros">Outros</option>
                             </select>
                         </div>
@@ -89,6 +98,7 @@
                                 <option value="Usado - Bom Estado">Usado - Bom Estado</option>
                                 <option value="Usado - Marcado de Uso">Usado - Marcado de Uso</option>
                                 <option value="Necessita Reparo">Necessita Reparo</option>
+                                <option value="Inservível / Sucata">Inservível / Sucata</option>
                             </select>
                         </div>
 
@@ -100,32 +110,32 @@
 
                     <div class="form-group">
                         <label for="announce-description">Descrição / Observações</label>
-                        <textarea id="announce-description" rows="3" placeholder="Informe detalhes do estado, acessórios inclusos ou motivo do desapego..."></textarea>
+                        <textarea id="announce-description" rows="3" placeholder="Informe detalhes do estado, motivo da transferência, etc..."></textarea>
                     </div>
 
                     <div class="form-section-title">Localização e Contato</div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="announce-school">Escola / Unidade *</label>
-                            <input type="text" id="announce-school" required placeholder="Ex: E.E. Clotta Lemos">
+                            <label for="announce-school">Órgão / Escola *</label>
+                            <input type="text" id="announce-school" required placeholder="Ex: E.E. Nome da Escola">
                         </div>
 
                         <div class="form-group">
                             <label for="announce-location">Município *</label>
-                            <input type="text" id="announce-location" required placeholder="Ex: Passos / MG">
+                            <input type="text" id="announce-location" required placeholder="Ex: Belo Horizonte / MG">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label for="announce-contact-person">Responsável pelo Item *</label>
-                            <input type="text" id="announce-contact-person" required placeholder="Ex: João (Diretor) / Maria (Secretária)">
+                            <input type="text" id="announce-contact-person" required placeholder="Ex: João (Diretor)">
                         </div>
 
                         <div class="form-group">
                             <label for="announce-phone">Telefone / WhatsApp *</label>
-                            <input type="text" id="announce-phone" required placeholder="(35) 90000-0000">
+                            <input type="text" id="announce-phone" required placeholder="(31) 90000-0000">
                         </div>
                     </div>
 
@@ -143,7 +153,6 @@
         </section>
     </div>
 
-    <!-- JavaScript Externo (no final do body) -->
     <script src="script.js"></script>
 </body>
 </html>
