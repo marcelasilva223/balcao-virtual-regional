@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduReuso Virtual - Balcão de Transferência de Bens</title>
     <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome para os ícones da interface -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -214,7 +213,7 @@
             </div>
         </section>
 
-        <!-- ABA 3: SOLICITAÇÕES (HISTÓRICO SIMPLIFICADO) -->
+        <!-- ABA 3: SOLICITAÇÕES (HISTÓRICO SIMPLIFICADO E PASSIVO) -->
         <section id="tab-requests" class="tab-content">
             <div class="requests-card">
                 <div class="requests-header">
@@ -239,7 +238,7 @@
                             </tr>
                         </thead>
                         <tbody id="requests-table-body">
-                            <!-- Preenchido dinamicamente pelo script.js -->
+                            <!-- Preenchido dinamicamente pelo script.js sem botões de clique -->
                         </tbody>
                     </table>
                 </div>
@@ -251,7 +250,6 @@
     <!-- MODAL DE DETALHES E SOLICITAÇÃO DE TRANSFERÊNCIA -->
     <div id="modal-details" class="modal-overlay">
         <div class="modal-container">
-            <!-- Cabeçalho do Modal -->
             <div class="modal-header">
                 <span id="modal-category-badge" class="badge-category-modal">MOBILIÁRIO</span>
                 <button type="button" class="btn-close-modal" onclick="closeModal()">
@@ -259,9 +257,7 @@
                 </button>
             </div>
 
-            <!-- Corpo do Modal -->
             <div class="modal-body">
-                <!-- Grid Superior: Imagem e Informações do Doador -->
                 <div class="modal-top-grid">
                     <div class="modal-img-container">
                         <img id="modal-item-image" src="" alt="Imagem do Item">
@@ -287,13 +283,11 @@
                     </div>
                 </div>
 
-                <!-- Descrição do Item -->
                 <div class="modal-section-box">
                     <h3>DESCRIÇÃO DO ITEM</h3>
                     <p id="modal-item-description">Sem descrição informada.</p>
                 </div>
 
-                <!-- Formulário de Solicitação -->
                 <form id="form-modal-request" onsubmit="handleModalSubmit(event)">
                     <div class="modal-form-title">
                         <i class="fa-solid fa-pen-to-square"></i> Formulário de Solicitação de Transferência
@@ -337,7 +331,6 @@
         </div>
     </div>
 
-    <!-- Script da Aplicação -->
     <script src="script.js"></script>
 </body>
 </html>
