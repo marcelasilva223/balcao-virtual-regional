@@ -1,5 +1,5 @@
 // Substitua pela URL da sua implantação do Apps Script (terminada em /exec)
-const API_URL = "https://script.google.com/macros/s/AKfycbyyN2ZV5_22OE8Za8b_E-S8tfec5xej7_o4UM3vQ3Q2U8r5TX18-SnpDBKJqdkGx4sA3g/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyBCtztXvxazxFrRezp2IAJJpQ_U4LMEkevxbrz34T7gyGJbbi4E5mAzmP059o5u4uNXQ/exec";
 
 let allItems = [];
 let selectedImageBase64 = "";
