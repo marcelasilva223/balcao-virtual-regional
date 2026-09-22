@@ -327,3 +327,29 @@ small {
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
+
+/* ==========================================================================
+   BANNER DE SUSTENTABILIDADE
+   ========================================================================== */
+.sustainability-banner {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.sustainability-banner h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+}
+
+.sustainability-banner p {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+    opacity: 0.95;
+}
