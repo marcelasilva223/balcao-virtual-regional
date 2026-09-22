@@ -29,8 +29,8 @@
                 <button id="tab-announce-btn" class="nav-btn" onclick="switchTab('announce')">
                     <i class="fa-solid fa-plus-circle"></i> Anunciar Ocioso
                 </button>
-                <button class="nav-btn disabled">
-                    <i class="fa-solid fa-box-archive"></i> Solicitações <span class="badge-count">1</span>
+                <button id="tab-requests-btn" class="nav-btn" onclick="switchTab('requests')">
+                    <i class="fa-solid fa-box-archive"></i> Solicitações <span id="requests-badge-count" class="badge-count">0</span>
                 </button>
                 <button class="nav-btn disabled">
                     <i class="fa-solid fa-circle-info"></i> Como Usar Grátis
@@ -134,7 +134,7 @@
                     
                     <div class="form-group">
                         <label for="announce-title">Título do Item *</label>
-                        <input type="text" id="announce-title" required placeholder="Ex: Conjunto de 25 Carteiras / Projetor Epson">
+                        <input type="text" id="announce-title" required placeholder="Ex: Armário de Aço 2 Portas Reforçado">
                     </div>
 
                     <div class="form-row">
@@ -171,7 +171,7 @@
 
                         <div class="form-group">
                             <label for="announce-patrimony">Nº de Patrimônio</label>
-                            <input type="text" id="announce-patrimony" placeholder="Caso possua, ex: 123456">
+                            <input type="text" id="announce-patrimony" placeholder="Caso possua, ex: PAT-2018-0045">
                         </div>
                     </div>
 
@@ -184,25 +184,25 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="announce-school">Órgão / Escola *</label>
-                            <input type="text" id="announce-school" required placeholder="Ex: E.M. Professora Maria Silva">
+                            <label for="announce-school">Órgão / Escola Doadora *</label>
+                            <input type="text" id="announce-school" required placeholder="Ex: E.M. Tiradentes">
                         </div>
 
                         <div class="form-group">
                             <label for="announce-location">Bairro / Município *</label>
-                            <input type="text" id="announce-location" required placeholder="Ex: Bairro Santo Antônio">
+                            <input type="text" id="announce-location" required placeholder="Ex: Região Norte">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label for="announce-contact-person">Responsável pelo Item *</label>
-                            <input type="text" id="announce-contact-person" required placeholder="Ex: João (Diretor)">
+                            <input type="text" id="announce-contact-person" required placeholder="Ex: Carlos (Almoxarifado)">
                         </div>
 
                         <div class="form-group">
                             <label for="announce-phone">Telefone / WhatsApp *</label>
-                            <input type="text" id="announce-phone" required placeholder="(31) 90000-0000">
+                            <input type="text" id="announce-phone" required placeholder="(31) 98888-0011">
                         </div>
                     </div>
 
@@ -216,6 +216,39 @@
                         <i class="fa-solid fa-paper-plane"></i> Publicar no Balcão
                     </button>
                 </form>
+            </div>
+        </section>
+
+        <!-- ABA 3: SOLICITAÇÕES -->
+        <section id="tab-requests" class="tab-content">
+            <div class="requests-card">
+                <div class="requests-header">
+                    <div>
+                        <h2>Histórico de Solicitações de Transferência</h2>
+                        <p class="requests-subtitle">Acompanhe os pedidos de transferência de bens realizados entre as unidades.</p>
+                    </div>
+                    <span class="storage-badge">
+                        Armazenamento Local Ativo
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="requests-table">
+                        <thead>
+                            <tr>
+                                <th>ITEM / PATRIMÔNIO</th>
+                                <th>ESCOLA SOLICITANTE</th>
+                                <th>ESCOLA DOADORA</th>
+                                <th>DATA PEDIDO</th>
+                                <th>STATUS</th>
+                                <th style="text-align: right;">AÇÃO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requests-table-body">
+                            <!-- Inserido dinamicamente via JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </main>
