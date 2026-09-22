@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
     document.getElementById(`tab-${tabName}`).classList.add('active');
     document.getElementById(`tab-${tabName}-btn`).classList.add('active');
@@ -117,7 +117,7 @@ async function loadFromGoogleSheets() {
         }
         
         loadingEl.style.display = "none";
-        renderCatalog(allItems);
+        filterItems();
     } catch (error) {
         loadingEl.innerHTML = "<p>Erro ao conectar com a base de dados do Google Sheets.</p>";
         console.error(error);
@@ -126,34 +126,51 @@ async function loadFromGoogleSheets() {
 
 function renderCatalog(items) {
     const catalogEl = document.getElementById('catalog-list');
+    const counterEl = document.getElementById('item-counter');
     catalogEl.innerHTML = "";
 
+    if (counterEl) {
+        counterEl.textContent = `Mostrando ${items ? items.length : 0} item(ns)`;
+    }
+
     if (!Array.isArray(items) || items.length === 0) {
-        catalogEl.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;'>Nenhum item disponível no momento.</p>";
+        catalogEl.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;'>Nenhum item encontrado com os filtros selecionados.</p>";
         return;
     }
 
     items.slice().reverse().forEach(item => {
         const imgSource = item.image || 'https://via.placeholder.com/400x250?text=Sem+Imagem';
+        
+        // Define classe CSS de acordo com o status
+        const statusText = item.status || 'Disponível';
+        let statusClass = 'disponivel';
+        if (statusText.toLowerCase().includes('solicita')) {
+            statusClass = 'solicitacao';
+        } else if (statusText.toLowerCase().includes('transf')) {
+            statusClass = 'transferido';
+        }
 
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
             <div class="card-img-container">
                 <img src="${imgSource}" alt="${item.title || 'Item'}">
-                <span class="card-badge">${item.category || 'Geral'}</span>
+                <span class="badge-status ${statusClass}">${statusText}</span>
+                <span class="badge-category">${item.category || 'Geral'}</span>
             </div>
             <div class="card-body">
                 <h3 class="card-title">${item.title || 'Sem título'}</h3>
-                <ul class="card-info-list">
-                    <li><i class="fa-solid fa-boxes-stacked"></i> <strong>Qtd:</strong> ${item.quantity || 1} un.</li>
-                    <li><i class="fa-solid fa-circle-check"></i> <strong>Estado:</strong> ${item.condition || ''}</li>
-                    <li><i class="fa-solid fa-barcode"></i> <strong>Patrimônio:</strong> ${item.patrimony || 'S/N'}</li>
-                    <li><i class="fa-solid fa-school"></i> <strong>Escola:</strong> ${item.school || ''}</li>
-                    <li><i class="fa-solid fa-location-dot"></i> <strong>Local:</strong> ${item.location || ''}</li>
-                    <li><i class="fa-solid fa-phone"></i> <strong>Contato:</strong> ${item.contactPerson || ''} (${item.phone || ''})</li>
-                </ul>
-                ${item.description ? `<div class="card-description">${item.description}</div>` : ''}
+                <div class="card-location-info">
+                    <p><i class="fa-solid fa-school"></i> ${item.school || 'Escola não informada'}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> ${item.location || 'Localização não informada'}</p>
+                </div>
+                <div class="card-meta-row">
+                    <span><strong>Qtd:</strong> ${item.quantity || 1}</span>
+                    <span><strong>Estado:</strong> ${item.condition || 'Não informado'}</span>
+                </div>
+                <button class="btn-card-action" onclick="showItemDetails('${item.contactPerson || ''}', '${item.phone || ''}', '${item.title || ''}')">
+                    <i class="fa-solid fa-circle-info"></i> Ver Detalhes e Solicitar
+                </button>
             </div>
         `;
         catalogEl.appendChild(card);
@@ -161,21 +178,37 @@ function renderCatalog(items) {
 }
 
 function filterItems() {
-    const query = document.getElementById('search-input').value.toLowerCase();
+    const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+    const category = document.getElementById('filter-category')?.value || '';
+    const condition = document.getElementById('filter-condition')?.value || '';
+    const status = document.getElementById('filter-status')?.value || '';
+
     const filtered = allItems.filter(item => {
         const title = String(item.title || '').toLowerCase();
         const school = String(item.school || '').toLowerCase();
-        const category = String(item.category || '').toLowerCase();
         const location = String(item.location || '').toLowerCase();
         const patrimony = String(item.patrimony || '').toLowerCase();
 
-        return (
-            title.includes(query) ||
-            school.includes(query) ||
-            category.includes(query) ||
-            location.includes(query) ||
-            patrimony.includes(query)
-        );
+        const matchesSearch = !search || title.includes(search) || school.includes(search) || location.includes(search) || patrimony.includes(search);
+        const matchesCategory = !category || item.category === category;
+        const matchesCondition = !condition || item.condition === condition;
+        const matchesStatus = !status || item.status === status;
+
+        return matchesSearch && matchesCategory && matchesCondition && matchesStatus;
     });
+
     renderCatalog(filtered);
+}
+
+function clearFilters() {
+    if (document.getElementById('search-input')) document.getElementById('search-input').value = '';
+    if (document.getElementById('filter-category')) document.getElementById('filter-category').value = '';
+    if (document.getElementById('filter-condition')) document.getElementById('filter-condition').value = '';
+    if (document.getElementById('filter-status')) document.getElementById('filter-status').value = '';
+    
+    renderCatalog(allItems);
+}
+
+function showItemDetails(contactPerson, phone, itemTitle) {
+    alert(`📋 Solicitação do item: "${itemTitle}"\n\nResponsável: ${contactPerson || 'Não informado'}\nContato / WhatsApp: ${phone || 'Não informado'}`);
 }
