@@ -82,7 +82,7 @@
                 </span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">Reaproveite bens públicos antes de comprar novos.</h2>
                 <p class="text-brand-100 text-sm sm:text-base leading-relaxed">
-                    Facilite o remanejamento patrimonial entre as 35 unidades escolares. Economize recursos públicos e evite o desperdício.
+                    Facilite o remanejamento patrimonial entre as escolas da rede. Economize recursos públicos e evite o desperdício.
                 </p>
             </div>
         </section>
@@ -141,7 +141,7 @@
                 </div>
             </div>
 
-            <!-- Grade onde os cartões do JS serão injetados -->
+            <!-- Grade de exibição dos itens -->
             <div id="items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
             <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 p-8">
@@ -206,7 +206,7 @@
                         </div>
                     </div>
 
-                    <!-- Upload Imagem -->
+                    <!-- Upload de Foto -->
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Foto do Item</label>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-xl bg-slate-50 cursor-pointer" onclick="document.getElementById('announce-image-file').click()">
@@ -230,7 +230,7 @@
                         <textarea required id="announce-description" rows="3" placeholder="Detalhes como voltagem, acessórios inclusos ou motivo do não uso..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-600"></textarea>
                     </div>
 
-                    <!-- Dados da Escola -->
+                    <!-- Identificação da Escola -->
                     <div class="p-4 bg-brand-50/60 rounded-xl border border-brand-100 space-y-4">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-brand-800 flex items-center">
                             <i class="fa-solid fa-school mr-1.5"></i> Identificação da Escola Doadora
@@ -250,7 +250,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">Responsável pelo Patrimônio <span class="text-red-500">*</span></label>
-                                <input type="text" required id="announce-contact-person" placeholder="Ex: Profe. Ana Silva" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                <input type="text" required id="announce-contact-person" placeholder="Ex: Prof. Ana Silva" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">WhatsApp de Contato <span class="text-red-500">*</span></label>
@@ -270,10 +270,10 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 3: GUIA HESPEDAGEM -->
+        <!-- SEÇÃO 3: GUIA COMO USAR -->
         <section id="tab-guide" class="tab-content hidden max-w-4xl mx-auto space-y-6">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
-                <h2 class="text-xl font-bold text-slate-800 mb-4">Como disponibilizar para as 35 escolas sem custos:</h2>
+                <h2 class="text-xl font-bold text-slate-800 mb-4">Como disponibilizar para as escolas sem custos:</h2>
                 <p class="text-sm text-slate-600 leading-relaxed mb-4">
                     Como o projeto usa apenas <strong>HTML, JS e Google Sheets</strong>, pode ser hospedado de forma 100% gratuita no <strong>GitHub Pages</strong>.
                 </p>
@@ -281,14 +281,13 @@
                     <li>Envie estes ficheiros (`index.html` e `script.js`) para o seu repositório no GitHub.</li>
                     <li>Vá a <strong>Settings > Pages</strong> no repositório.</li>
                     <li>Em <i>Branch</i>, selecione <code>main</code> e clique em <strong>Save</strong>.</li>
-                    <li>Partilhe o link gerado com as 35 diretorias escolares!</li>
+                    <li>Partilhe o link gerado com as diretorias escolares!</li>
                 </ol>
             </div>
         </section>
 
     </main>
 
-    <!-- IMPORTAÇÃO DO SCRIPT JS -->
     <script src="script.js"></script>
 </body>
 </html>
