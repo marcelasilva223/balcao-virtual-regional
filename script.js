@@ -4,15 +4,14 @@ let allItems = [];
 let selectedImageBase64 = "";
 let currentSelectedItem = null;
 
-// Dados padrão iniciais (Histórico estático para exibição)
 const DEFAULT_REQUESTS = [
     {
         id: "req-1001",
         itemTitle: "Armário de Aço 2 Portas Reforçado",
         patrimony: "PAT-2018-0045",
-        solicitaireSchool: "E.M. Cora Coralina",
+        solicitaireSchool: "E. E. Paraisense",
         solicitaireContact: "Luciana M. (Gestora) ((31) 98888-0011)",
-        donorSchool: "E.M. Tiradentes",
+        donorSchool: "E. E. Cel. Lucas Magalhães",
         date: "2026-09-15",
         status: "Concluído"
     }
@@ -305,7 +304,7 @@ async function handleAnnounceSubmit(e) {
 }
 
 /* ==========================================================================
-   HISTÓRICO DE SOLICITAÇÕES (EXIBIÇÃO APENAS DE LEITURA)
+   HISTÓRICO DE SOLICITAÇÕES
    ========================================================================== */
 function initRequestsStorage() {
     if (!localStorage.getItem('edureuso_requests')) {
@@ -351,7 +350,6 @@ function renderRequestsTable() {
         return;
     }
 
-    // Renderiza cada linha como texto simples + selo de status (sem botões ou eventos de clique)
     requests.forEach(req => {
         const tr = document.createElement('tr');
         const isPendente = req.status === 'Pendente';
