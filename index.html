@@ -3,289 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balcão Virtual - Bolsa de Reuso de Bens Escolares</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: { 50: '#f0f7ff', 100: '#e0effe', 600: '#1d4ed8', 700: '#1e40af', 800: '#1e3a8a' },
-                        eco: { 50: '#f0fdf4', 500: '#22c55e', 600: '#16a34a', 700: '#15803d' }
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Balcão Virtual - Regional de Ensino</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
-    
-    <!-- CABEÇALHO -->
-    <header class="bg-brand-800 text-white shadow-lg sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('catalog')">
-                    <div class="bg-white/10 p-2.5 rounded-xl backdrop-blur-md border border-white/20">
-                        <i class="fa-solid fa-recycle text-eco-500 text-2xl sm:text-3xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-lg sm:text-xl font-bold tracking-tight leading-snug">EduReuso <span class="text-eco-500 font-normal">Virtual</span></h1>
-                        <p class="text-xs text-slate-300 hidden sm:block">Balcão de Transferência de Bens Móveis Escolares</p>
-                    </div>
-                </div>
+<body>
 
-                <!-- Navegação Desktop -->
-                <nav class="hidden md:flex items-center space-x-1">
-                    <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-4 py-2.5 rounded-lg text-sm font-medium transition-all bg-white/10 text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-boxes-stacked"></i><span>Catálogo de Bens</span>
-                    </button>
-                    <button onclick="switchTab('announce')" id="nav-announce" class="nav-btn px-4 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-200 hover:bg-white/10 hover:text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-plus-circle"></i><span>Anunciar Ocioso</span>
-                    </button>
-                    <button onclick="switchTab('guide')" id="nav-guide" class="nav-btn px-4 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-200 hover:bg-white/10 hover:text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-circle-info"></i><span>Como Usar</span>
-                    </button>
-                </nav>
-
-                <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="text-slate-200 hover:text-white p-2 rounded-lg">
-                        <i class="fa-solid fa-bars text-xl" id="mobile-menu-icon"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Menu Mobile -->
-        <div id="mobile-menu" class="hidden md:hidden bg-brand-800 border-t border-brand-700 px-4 pt-2 pb-4 space-y-2">
-            <button onclick="switchTab('catalog'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-3">
-                <i class="fa-solid fa-boxes-stacked w-5"></i><span>Catálogo de Bens</span>
-            </button>
-            <button onclick="switchTab('announce'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-md text-base font-medium text-slate-200 hover:bg-white/10 flex items-center space-x-3">
-                <i class="fa-solid fa-plus-circle w-5"></i><span>Anunciar Ocioso</span>
-            </button>
-            <button onclick="switchTab('guide'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-md text-base font-medium text-slate-200 hover:bg-white/10 flex items-center space-x-3">
-                <i class="fa-solid fa-circle-info w-5"></i><span>Como Usar</span>
-            </button>
-        </div>
+    <header>
+        <h1>Balcão Virtual Regional</h1>
+        <p>Plataforma de compartilhamento de itens e recursos entre escolas</p>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        
-        <!-- Banner Sustentabilidade -->
-        <section class="mb-8 bg-gradient-to-r from-brand-700 to-brand-800 rounded-2xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
-            <div class="relative z-10 max-w-3xl">
-                <span class="bg-eco-500/20 text-eco-500 border border-eco-500/30 text-xs uppercase tracking-wider font-semibold px-3 py-1 rounded-full inline-block mb-3">
-                    <i class="fa-solid fa-leaf mr-1"></i> Sustentabilidade na Gestão Pública
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">Reaproveite bens públicos antes de comprar novos.</h2>
-                <p class="text-brand-100 text-sm sm:text-base leading-relaxed">
-                    Facilite o remanejamento patrimonial entre as escolas da rede. Economize recursos públicos e evite o desperdício.
-                </p>
+    <nav class="nav-tabs">
+        <button id="tab-catalog-btn" class="active" onclick="switchTab('catalog')">Catálogo de Itens</button>
+        <button id="tab-announce-btn" onclick="switchTab('announce')">Anunciar Novo Item</button>
+    </nav>
+
+    <main class="container">
+        <!-- SEÇÃO: CATÁLOGO -->
+        <section id="tab-catalog" class="tab-content active">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Buscar por item, escola ou categoria..." oninput="filterItems()">
             </div>
+            <div id="loading" class="loading">Carregando itens...</div>
+            <div id="catalog-list" class="catalog-grid"></div>
         </section>
 
-        <!-- SEÇÃO 1: CATÁLOGO -->
-        <section id="tab-catalog" class="tab-content space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="col-span-1 sm:col-span-2 lg:col-span-1">
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Buscar Item / Escola / Tombo</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Ex: Cadeira, Projetor..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
-                        </div>
-                    </div>
+        <!-- SEÇÃO: ANUNCIAR ITEM -->
+        <section id="tab-announce" class="tab-content">
+            <h2>Anunciar Item para Outras Escolas</h2>
+            <form id="form-announce" onsubmit="handleAnnounceSubmit(event)">
+                <div class="form-group">
+                    <label for="announce-title">Título do Item*</label>
+                    <input type="text" id="announce-title" required placeholder="Ex: Projetor Epson PowerLite">
+                </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Categoria</label>
-                        <select id="filter-category" onchange="applyFilters()" class="w-full py-2 px-3 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
-                            <option value="">Todas as Categorias</option>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-category">Categoria*</label>
+                        <select id="announce-category" required>
+                            <option value="">Selecione...</option>
+                            <option value="Tecnologia/Informática">Tecnologia/Informática</option>
                             <option value="Mobiliário">Mobiliário</option>
-                            <option value="Eletrônicos">Eletrônicos</option>
-                            <option value="Informática">Informática</option>
-                            <option value="Esportes">Esportes</option>
+                            <option value="Equipamento de Som/Áudio">Equipamento de Som/Áudio</option>
+                            <option value="Material Didático/Esportivo">Material Didático/Esportivo</option>
                             <option value="Outros">Outros</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Estado de Conservação</label>
-                        <select id="filter-condition" onchange="applyFilters()" class="w-full py-2 px-3 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
-                            <option value="">Todos os Estados</option>
-                            <option value="Ótimo">Ótimo</option>
-                            <option value="Bom">Bom</option>
-                            <option value="Regular">Regular</option>
-                            <option value="Necessita Reparo">Necessita Reparo</option>
+                    <div class="form-group">
+                        <label for="announce-quantity">Quantidade*</label>
+                        <input type="number" id="announce-quantity" min="1" required value="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-condition">Estado do Item*</label>
+                        <select id="announce-condition" required>
+                            <option value="Novo/Sem uso">Novo/Sem uso</option>
+                            <option value="Usado - Excelente">Usado - Excelente</option>
+                            <option value="Usado - Bom">Usado - Bom</option>
+                            <option value="Necessita pequeno reparo">Necessita pequeno reparo</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Status</label>
-                        <select id="filter-status" onchange="applyFilters()" class="w-full py-2 px-3 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
-                            <option value="">Todos os Status</option>
-                            <option value="Disponível">Disponível</option>
-                            <option value="Em Transferência">Em Transferência</option>
-                            <option value="Transferido">Transferido</option>
-                        </select>
+                    <div class="form-group">
+                        <label for="announce-patrimony">Nº de Patrimônio</label>
+                        <input type="text" id="announce-patrimony" placeholder="Deixe em branco se N/A">
                     </div>
                 </div>
 
-                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span id="results-count">Mostrando 0 itens</span>
-                    <button onclick="resetFilters()" class="text-brand-600 hover:text-brand-800 font-medium flex items-center space-x-1">
-                        <i class="fa-solid fa-rotate-left"></i><span>Limpar Filtros</span>
-                    </button>
+                <div class="form-group">
+                    <label for="announce-description">Descrição Detalhada</label>
+                    <textarea id="announce-description" rows="3" placeholder="Detalhes adicionais do item..."></textarea>
                 </div>
-            </div>
 
-            <!-- Grade de exibição dos itens -->
-            <div id="items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <hr>
 
-            <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 p-8">
-                <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-2"></i>
-                <h3 class="text-lg font-bold text-slate-700 mb-1">Nenhum item encontrado</h3>
-                <p class="text-slate-500 text-sm max-w-md mx-auto mb-6">Não foram encontrados itens com os filtros aplicados.</p>
-                <button onclick="resetFilters()" class="bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm px-4 py-2 rounded-lg">Limpar Filtros</button>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 2: ANUNCIAR ITEM -->
-        <section id="tab-announce" class="tab-content hidden max-w-3xl mx-auto">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
-                <div class="flex items-center space-x-3 pb-6 mb-6 border-b border-slate-100">
-                    <div class="bg-eco-50 p-3 rounded-xl text-eco-600">
-                        <i class="fa-solid fa-box-archive text-xl"></i>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-school">Nome da Escola/Unidade*</label>
+                        <input type="text" id="announce-school" required placeholder="Ex: E.E. Professor Silva">
                     </div>
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-800">Cadastrar Bem Ocioso para Transferência</h2>
-                        <p class="text-xs text-slate-500">Disponibilize bens móveis excedentes para outras escolas da rede.</p>
+
+                    <div class="form-group">
+                        <label for="announce-location">Município/Localização*</label>
+                        <input type="text" id="announce-location" required placeholder="Ex: Centro / Cidade">
                     </div>
                 </div>
 
-                <form id="form-announce" onsubmit="handleAnnounceSubmit(event)" class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nome do Item <span class="text-red-500">*</span></label>
-                        <input type="text" required id="announce-title" placeholder="Ex: Projetor Epson PowerLite" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-600">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="announce-contact-person">Responsável pelo Contato*</label>
+                        <input type="text" id="announce-contact-person" required placeholder="Ex: Maria (Diretora)">
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Categoria <span class="text-red-500">*</span></label>
-                            <select required id="announce-category" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-600">
-                                <option value="">Selecione...</option>
-                                <option value="Mobiliário">Mobiliário</option>
-                                <option value="Eletrônicos">Eletrônicos</option>
-                                <option value="Informática">Informática</option>
-                                <option value="Esportes">Esportes</option>
-                                <option value="Outros">Outros</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Quantidade <span class="text-red-500">*</span></label>
-                            <input type="number" min="1" value="1" required id="announce-quantity" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-600">
-                        </div>
+                    <div class="form-group">
+                        <label for="announce-phone">Telefone/WhatsApp para Contato*</label>
+                        <input type="text" id="announce-phone" required placeholder="(00) 00000-0000">
                     </div>
+                </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Estado de Conservação <span class="text-red-500">*</span></label>
-                            <select required id="announce-condition" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-600">
-                                <option value="">Selecione...</option>
-                                <option value="Ótimo">Ótimo (Sem avarias)</option>
-                                <option value="Bom">Bom (Sinais leves de uso)</option>
-                                <option value="Regular">Regular (Funcional)</option>
-                                <option value="Necessita Reparo">Necessita Reparo</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nº do Tombo / Patrimônio</label>
-                            <input type="text" id="announce-patrimony" placeholder="Ex: PAT-2023-019" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-600">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="announce-image">Foto do Item</label>
+                    <input type="file" id="announce-image" accept="image/*" onchange="handleImageCompress(event)">
+                </div>
 
-                    <!-- Upload de Foto -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Foto do Item</label>
-                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-xl bg-slate-50 cursor-pointer" onclick="document.getElementById('announce-image-file').click()">
-                            <div class="space-y-1 text-center">
-                                <div id="image-preview-container" class="hidden mb-3">
-                                    <img id="image-preview" src="" alt="Pré-visualização" class="h-32 mx-auto rounded-lg object-cover border border-slate-200">
-                                </div>
-                                <div id="image-placeholder-icon">
-                                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
-                                </div>
-                                <div class="text-xs text-slate-600">
-                                    <span class="font-semibold text-brand-600">Clique para selecionar foto</span>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="file" id="announce-image-file" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Descrição Detalhada <span class="text-red-500">*</span></label>
-                        <textarea required id="announce-description" rows="3" placeholder="Detalhes como voltagem, acessórios inclusos ou motivo do não uso..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-600"></textarea>
-                    </div>
-
-                    <!-- Identificação da Escola -->
-                    <div class="p-4 bg-brand-50/60 rounded-xl border border-brand-100 space-y-4">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-brand-800 flex items-center">
-                            <i class="fa-solid fa-school mr-1.5"></i> Identificação da Escola Doadora
-                        </h3>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Nome da Escola <span class="text-red-500">*</span></label>
-                                <input type="text" required id="announce-school" placeholder="Ex: E.M. Paulo Freire" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Bairro / Setor <span class="text-red-500">*</span></label>
-                                <input type="text" required id="announce-location" placeholder="Ex: Bairro Centro" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Responsável pelo Patrimônio <span class="text-red-500">*</span></label>
-                                <input type="text" required id="announce-contact-person" placeholder="Ex: Prof. Ana Silva" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">WhatsApp de Contato <span class="text-red-500">*</span></label>
-                                <input type="text" required id="announce-phone" placeholder="Ex: (31) 99999-8888" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end space-x-3 pt-2">
-                        <button type="button" onclick="switchTab('catalog')" class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium">Cancelar</button>
-                        <button type="submit" id="btn-submit" class="px-6 py-2.5 rounded-lg bg-eco-600 hover:bg-eco-700 text-white text-sm font-medium transition-colors shadow-sm flex items-center">
-                            <i class="fa-solid fa-paper-plane mr-2"></i>
-                            <span>Publicar Anúncio</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <button type="submit" id="btn-submit" class="btn-primary">Publicar Item no Balcão</button>
+            </form>
         </section>
-
-        <!-- SEÇÃO 3: GUIA COMO USAR -->
-        <section id="tab-guide" class="tab-content hidden max-w-4xl mx-auto space-y-6">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
-                <h2 class="text-xl font-bold text-slate-800 mb-4">Como disponibilizar para as escolas sem custos:</h2>
-                <p class="text-sm text-slate-600 leading-relaxed mb-4">
-                    Como o projeto usa apenas <strong>HTML, JS e Google Sheets</strong>, pode ser hospedado de forma 100% gratuita no <strong>GitHub Pages</strong>.
-                </p>
-                <ol class="list-decimal pl-5 text-xs text-slate-600 space-y-2">
-                    <li>Envie estes ficheiros (`index.html` e `script.js`) para o seu repositório no GitHub.</li>
-                    <li>Vá a <strong>Settings > Pages</strong> no repositório.</li>
-                    <li>Em <i>Branch</i>, selecione <code>main</code> e clique em <strong>Save</strong>.</li>
-                    <li>Partilhe o link gerado com as diretorias escolares!</li>
-                </ol>
-            </div>
-        </section>
-
     </main>
 
     <script src="script.js"></script>
