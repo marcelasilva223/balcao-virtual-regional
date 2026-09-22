@@ -174,7 +174,7 @@
                         <textarea id="announce-description" rows="3" placeholder="Informe detalhes do estado, motivo da transferência, etc..."></textarea>
                     </div>
 
-                    <div class="form-section-title">Dados da Escola Doadora (Responsável)</div>
+                    <div class="form-section-title">Localização e Contato</div>
 
                     <div class="form-row">
                         <div class="form-group">
@@ -190,7 +190,7 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="announce-contact-person">Responsável pelo Item / Gestor *</label>
+                            <label for="announce-contact-person">Responsável pelo Item *</label>
                             <input type="text" id="announce-contact-person" required placeholder="Ex: Carlos (Almoxarifado)">
                         </div>
 
@@ -213,7 +213,7 @@
             </div>
         </section>
 
-        <!-- ABA 3: SOLICITAÇÕES (HISTÓRICO SIMPLIFICADO E PASSIVO) -->
+        <!-- ABA 3: SOLICITAÇÕES -->
         <section id="tab-requests" class="tab-content">
             <div class="requests-card">
                 <div class="requests-header">
@@ -238,7 +238,7 @@
                             </tr>
                         </thead>
                         <tbody id="requests-table-body">
-                            <!-- Preenchido dinamicamente pelo script.js sem botões de clique -->
+                            <!-- Preenchido dinamicamente pelo script.js -->
                         </tbody>
                     </table>
                 </div>
@@ -269,7 +269,7 @@
                         
                         <div class="modal-info-list">
                             <p><strong>Escola Responsável:</strong> <span id="modal-school">--</span></p>
-                            <p><strong>Localização/Bairro:</strong> <span id="modal-location">--</span></p>
+                            <p><strong>Localização:</strong> <span id="modal-location">--</span></p>
                             <p><strong>Quantidade:</strong> <span id="modal-quantity">--</span> unidade(s)</p>
                             <p><strong>Estado de Conservação:</strong> <span id="modal-condition">--</span></p>
                             <p><strong>Patrimônio/Tombo:</strong> <span id="modal-patrimony">--</span></p>
@@ -295,8 +295,45 @@
 
                     <div class="modal-form-row">
                         <div class="form-group">
-                            <label for="req-school">Sua Escola Solicitante *</label>
-                            <input type="text" id="req-school" required placeholder="Ex: E.M. Paulo Freire">
+                            <label for="req-school">Escola Solicitante *</label>
+                            <select id="req-school" required>
+                                <option value="">Selecione escola...</option>
+                                <option value="E. E. Cel. Lucas Magalhães">E. E. Cel. Lucas Magalhães</option>
+                                <option value="E. E. Dr. José Teodoro de Souza">E. E. Dr. José Teodoro de Souza</option>
+                                <option value="E. E. Melo Viana">E. E. Melo Viana</option>
+                                <option value="E. E. São Gabriel">E. E. São Gabriel</option>
+                                <option value="E. E. Iarbas Rodrigues">E. E. Iarbas Rodrigues</option>
+                                <option value="E. E. Geraldo Ribeiro Dias">E. E. Geraldo Ribeiro Dias</option>
+                                <option value="E. E. Alice Autran Dourado">E. E. Alice Autran Dourado</option>
+                                <option value="E. E. Dona Queridinha Bias Fortes">E. E. Dona Queridinha Bias Fortes</option>
+                                <option value="E. E. Major Luiz Zerbini">E. E. Major Luiz Zerbini</option>
+                                <option value="E. E. Dr. André Cortez Granero">E. E. Dr. André Cortez Granero</option>
+                                <option value="E. E. Nossa Senhora Aparecida">E. E. Nossa Senhora Aparecida</option>
+                                <option value="E. E. Dr. Benedito Leite Ribeiro">E. E. Dr. Benedito Leite Ribeiro</option>
+                                <option value="E. E. Dr. Antônio Carlos">E. E. Dr. Antônio Carlos</option>
+                                <option value="E. E. de Ibiraci">E. E. de Ibiraci</option>
+                                <option value="E. E. de Itamogi">E. E. de Itamogi</option>
+                                <option value="E. E. José Soares de Araújo">E. E. José Soares de Araújo</option>
+                                <option value="E. E. Ary Pimenta Bugelli">E. E. Ary Pimenta Bugelli</option>
+                                <option value="E. E. Prof. Maria Leonor Nasser">E. E. Prof. Maria Leonor Nasser</option>
+                                <option value="E. E. Eduardo Senedese">E. E. Eduardo Senedese</option>
+                                <option value="E. E. Dr. Wenceslau Braz">E. E. Dr. Wenceslau Braz</option>
+                                <option value="E. E. de Milagre">E. E. de Milagre</option>
+                                <option value="E. E. Américo de Paiva">E. E. Américo de Paiva</option>
+                                <option value="E. E. Cel. Neca Lemos">E. E. Cel. Neca Lemos</option>
+                                <option value="E. E. Dr. Farid Silva">E. E. Dr. Farid Silva</option>
+                                <option value="E. E. Cel. João Ferreira Barbosa">E. E. Cel. João Ferreira Barbosa</option>
+                                <option value="E. E. Cel. José Cândido">E. E. Cel. José Cândido</option>
+                                <option value="E. E. Prof. Inês Miranda de Almeida">E. E. Prof. Inês Miranda de Almeida</option>
+                                <option value="E. E. Com. Ana Cândida de Figueiredo">E. E. Com. Ana Cândida de Figueiredo</option>
+                                <option value="E. E. Com. João Alves de Figueiredo">E. E. Com. João Alves de Figueiredo</option>
+                                <option value="E. E. Paula Frassinetti">E. E. Paula Frassinetti</option>
+                                <option value="E. E. Clóvis Salgado">E. E. Clóvis Salgado</option>
+                                <option value="E. E. Paraisense">E. E. Paraisense</option>
+                                <option value="E. E. Benedito Ferreira Calafiori">E. E. Benedito Ferreira Calafiori</option>
+                                <option value="CESEC Alda Polastre">CESEC Alda Polastre</option>
+                                <option value="E. E. Dr. Tancredo de Almeida Neves">E. E. Dr. Tancredo de Almeida Neves</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="req-responsible">Responsável / Cargo *</label>
