@@ -13,7 +13,8 @@ const DEFAULT_REQUESTS = [
         solicitaireContact: "Luciana M. (Gestora) ((31) 98888-0011)",
         donorSchool: "E. E. Cel. Lucas Magalhães",
         date: "2026-09-15",
-        status: "Concluído"
+        status: "Concluído",
+        requestedQuantity: 1
     }
 ];
 
@@ -180,6 +181,15 @@ function openModal(itemId) {
 
     document.getElementById('form-modal-request').reset();
 
+    // Configura dinamicamente o limite do campo de quantidade desejada
+    const reqQtyInput = document.getElementById('req-quantity');
+    if (reqQtyInput) {
+        const availableQty = parseInt(item.quantity, 10) || 1;
+        reqQtyInput.min = "1";
+        reqQtyInput.max = availableQty.toString();
+        reqQtyInput.value = "1";
+    }
+
     const modalEl = document.getElementById('modal-details');
     if (modalEl) modalEl.classList.add('active');
 }
@@ -200,6 +210,7 @@ function handleModalSubmit(e) {
     const email = document.getElementById('req-email').value;
     const phone = document.getElementById('req-phone').value;
     const justification = document.getElementById('req-justification').value;
+    const requestedQuantity = parseInt(document.getElementById('req-quantity').value, 10) || 1;
 
     const today = new Date().toISOString().split('T')[0];
 
@@ -212,7 +223,8 @@ function handleModalSubmit(e) {
         donorSchool: currentSelectedItem.school || "Escola Doadora",
         date: today,
         status: "Pendente",
-        justification: justification
+        justification: justification,
+        requestedQuantity: requestedQuantity
     };
 
     const requests = getStoredRequests();
@@ -354,10 +366,11 @@ function renderRequestsTable() {
         const tr = document.createElement('tr');
         const isPendente = req.status === 'Pendente';
         const statusClass = isPendente ? 'pendente' : 'concluido';
+        const qtyText = req.requestedQuantity ? ` (Qtd: ${req.requestedQuantity})` : '';
 
         tr.innerHTML = `
             <td>
-                <div class="item-main-title">${req.itemTitle}</div>
+                <div class="item-main-title">${req.itemTitle}${qtyText}</div>
                 <div class="item-sub-patrimony">Tombo: ${req.patrimony || 'S/N'}</div>
             </td>
             <td>
