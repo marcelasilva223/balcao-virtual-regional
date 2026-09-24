@@ -46,10 +46,10 @@ function switchTab(tabName) {
     if (targetTab) targetTab.classList.add('active');
     if (targetBtn) targetBtn.classList.add('active');
 
-   if (tabName === 'requests') {
-    loadRequestsFromGoogleSheets();
+    if (tabName === 'requests') {
+        loadRequestsFromGoogleSheets();
+    }
 }
-
 /* ==========================================================================
    CARREGAMENTO E EXIBIÇÃO DO CATÁLOGO
    ========================================================================== */
