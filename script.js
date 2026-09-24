@@ -200,40 +200,119 @@ function closeModal() {
     currentSelectedItem = null;
 }
 
-function handleModalSubmit(e) {
+async function handleModalSubmit(e) {
     e.preventDefault();
 
-    if (!currentSelectedItem) return;
+    if (!currentSelectedItem) {
+        alert("Não foi possível identificar o item selecionado.");
+        return;
+    }
+
+    const submitBtn = document.querySelector('#form-modal-request .btn-modal-confirm');
+
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Enviando...`;
+    }
 
     const schoolName = document.getElementById('req-school').value;
     const responsible = document.getElementById('req-responsible').value;
     const email = document.getElementById('req-email').value;
     const phone = document.getElementById('req-phone').value;
     const justification = document.getElementById('req-justification').value;
-    const requestedQuantity = parseInt(document.getElementById('req-quantity').value, 10) || 1;
+    const requestedQuantity = parseInt(
+        document.getElementById('req-quantity').value,
+        10
+    ) || 1;
 
-    const today = new Date().toISOString().split('T')[0];
+    // Data no horário local
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
 
     const newRequest = {
+        action: "createRequest",
+
         id: "req-" + Date.now(),
-        itemTitle: currentSelectedItem.title,
+
+        // Identificação do bem
+        itemId: currentSelectedItem.id || "",
+        itemTitle: currentSelectedItem.title || "",
         patrimony: currentSelectedItem.patrimony || "S/N",
-        solicitaireSchool: schoolName,
-        solicitaireContact: `${responsible} (${phone} / ${email})`,
+
+        // Escola doadora
         donorSchool: currentSelectedItem.school || "Escola Doadora",
-        date: today,
-        status: "Pendente",
+
+        // Escola solicitante
+        requesterSchool: schoolName,
+        requesterResponsible: responsible,
+        requesterEmail: email,
+        requesterPhone: phone,
+
+        // Solicitação
+        requestedQuantity: requestedQuantity,
         justification: justification,
-        requestedQuantity: requestedQuantity
+
+        // Controle
+        date: today,
+        status: "Pendente"
     };
 
-    const requests = getStoredRequests();
-    requests.unshift(newRequest);
-    saveRequests(requests);
+    try {
 
-    closeModal();
-    alert("✅ Solicitação de transferência realizada com sucesso!");
-    switchTab('requests');
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(newRequest)
+        });
+
+        const responseText = await response.text();
+
+        let result;
+
+        try {
+            result = JSON.parse(responseText);
+        } catch (parseError) {
+            throw new Error("A API retornou uma resposta inválida.");
+        }
+
+        if (!response.ok || result.result !== "success") {
+            throw new Error(
+                result.error || "Não foi possível registrar a solicitação."
+            );
+        }
+
+        // Limpa o formulário
+        document.getElementById('form-modal-request').reset();
+
+        closeModal();
+
+        alert("✅ Solicitação de transferência registrada com sucesso!");
+
+        // Vai para a aba de solicitações
+        switchTab('requests');
+
+    } catch (error) {
+
+        console.error("Erro ao registrar solicitação:", error);
+
+        alert(
+            "❌ Não foi possível registrar a solicitação.\n\n" +
+            error.message
+        );
+
+    } finally {
+
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML =
+                `<i class="fa-solid fa-paper-plane"></i> Confirmar Solicitação`;
+        }
+    }
 }
 
 /* ==========================================================================
