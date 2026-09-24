@@ -21,8 +21,8 @@ const DEFAULT_REQUESTS = [
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Carrega somente o catálogo ao abrir o site
     loadFromGoogleSheets();
-    loadRequestsFromGoogleSheets();
 
     const modalOverlay = document.getElementById('modal-details');
 
@@ -46,7 +46,7 @@ function switchTab(tabName) {
     if (targetTab) targetTab.classList.add('active');
     if (targetBtn) targetBtn.classList.add('active');
 
-    if (tabName === 'requests') {
+   if (tabName === 'requests') {
     loadRequestsFromGoogleSheets();
 }
 
