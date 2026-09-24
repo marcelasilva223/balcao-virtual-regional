@@ -3,6 +3,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyBCtztXvxazxFrRezp2IAJ
 let allItems = [];
 let selectedImageBase64 = "";
 let currentSelectedItem = null;
+let allRequests = [];
 
 const DEFAULT_REQUESTS = [
     {
@@ -19,11 +20,12 @@ const DEFAULT_REQUESTS = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-    initRequestsStorage();
+
     loadFromGoogleSheets();
-    renderRequestsTable();
+    loadRequestsFromGoogleSheets();
 
     const modalOverlay = document.getElementById('modal-details');
+
     if (modalOverlay) {
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) closeModal();
@@ -45,8 +47,7 @@ function switchTab(tabName) {
     if (targetBtn) targetBtn.classList.add('active');
 
     if (tabName === 'requests') {
-        renderRequestsTable();
-    }
+    loadRequestsFromGoogleSheets();
 }
 
 /* ==========================================================================
@@ -394,6 +395,60 @@ async function handleAnnounceSubmit(e) {
     }
 }
 
+async function loadRequestsFromGoogleSheets() {
+
+    const tbody = document.getElementById('requests-table-body');
+    const badgeEl = document.getElementById('requests-badge-count');
+
+    if (!tbody) return;
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="5" style="text-align:center; color:#64748b; padding:2rem;">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                Carregando solicitações...
+            </td>
+        </tr>
+    `;
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}?action=getRequests&_=${Date.now()}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Erro ao consultar a API.");
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("A API retornou dados inválidos.");
+        }
+
+        allRequests = data;
+
+        renderRequestsTable();
+
+    } catch (error) {
+
+        console.error("Erro ao carregar solicitações:", error);
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align:center; color:#dc2626; padding:2rem;">
+                    Não foi possível carregar as solicitações.
+                </td>
+            </tr>
+        `;
+
+        if (badgeEl) {
+            badgeEl.textContent = "0";
+        }
+    }
+}
+
 /* ==========================================================================
    HISTÓRICO DE SOLICITAÇÕES
    ========================================================================== */
@@ -417,51 +472,126 @@ function saveRequests(requests) {
 }
 
 function renderRequestsTable() {
+
     const tbody = document.getElementById('requests-table-body');
     const badgeEl = document.getElementById('requests-badge-count');
+
     if (!tbody) return;
 
-    const requests = getStoredRequests();
-    
+    const requests = Array.isArray(allRequests)
+        ? allRequests
+        : [];
+
+    /* ----------------------------------------------------------------------
+       Contador de solicitações pendentes
+       ---------------------------------------------------------------------- */
+
     if (badgeEl) {
-        const pendingCount = requests.filter(r => r.status === 'Pendente').length;
+
+        const pendingCount = requests.filter(
+            r => String(r.status || '').toLowerCase() === 'pendente'
+        ).length;
+
         badgeEl.textContent = pendingCount;
     }
 
     tbody.innerHTML = "";
 
+    /* ----------------------------------------------------------------------
+       Nenhuma solicitação
+       ---------------------------------------------------------------------- */
+
     if (requests.length === 0) {
+
         tbody.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center; color: #64748b; padding: 2rem;">
+                <td colspan="5"
+                    style="text-align:center; color:#64748b; padding:2rem;">
                     Nenhuma solicitação de transferência registrada até o momento.
                 </td>
             </tr>
         `;
+
         return;
     }
 
-    requests.forEach(req => {
+    /* ----------------------------------------------------------------------
+       Ordenação - mais recentes primeiro
+       ---------------------------------------------------------------------- */
+
+    const orderedRequests = [...requests].reverse();
+
+    orderedRequests.forEach(req => {
+
         const tr = document.createElement('tr');
-        const isPendente = req.status === 'Pendente';
-        const statusClass = isPendente ? 'pendente' : 'concluido';
-        const qtyText = req.requestedQuantity ? ` (Qtd: ${req.requestedQuantity})` : '';
+
+        const status = req.status || "Pendente";
+
+        let statusClass = "pendente";
+
+        if (
+            status === "Concluído" ||
+            status === "Aprovada" ||
+            status === "Transferido"
+        ) {
+            statusClass = "concluido";
+        }
+
+        const qtyText = req.requestedQuantity
+            ? ` (Qtd: ${req.requestedQuantity})`
+            : '';
 
         tr.innerHTML = `
             <td>
-                <div class="item-main-title">${req.itemTitle}${qtyText}</div>
-                <div class="item-sub-patrimony">Tombo: ${req.patrimony || 'S/N'}</div>
+                <div class="item-main-title">
+                    ${req.itemTitle || 'Item não informado'}${qtyText}
+                </div>
+
+                <div class="item-sub-patrimony">
+                    Tombo: ${req.patrimony || 'S/N'}
+                </div>
             </td>
+
             <td>
-                <div class="school-main-title">${req.solicitaireSchool}</div>
-                <div class="school-sub-contact">${req.solicitaireContact}</div>
+                <div class="school-main-title">
+                    ${req.requesterSchool || 'Não informado'}
+                </div>
+
+                <div class="school-sub-contact">
+                    ${req.requesterResponsible || ''}
+                </div>
             </td>
-            <td>${req.donorSchool}</td>
-            <td>${req.date}</td>
+
             <td>
-                <span class="status-pill ${statusClass}">${req.status}</span>
+                ${req.donorSchool || 'Não informado'}
+            </td>
+
+            <td>
+                ${formatRequestDate(req.date)}
+            </td>
+
+            <td>
+                <span class="status-pill ${statusClass}">
+                    ${status}
+                </span>
             </td>
         `;
+
         tbody.appendChild(tr);
     });
+}
+
+function formatRequestDate(dateValue) {
+
+    if (!dateValue) {
+        return "--";
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+        return dateValue;
+    }
+
+    return date.toLocaleDateString('pt-BR');
 }
