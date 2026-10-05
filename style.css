@@ -555,14 +555,37 @@ body {
     font-weight: 700;
 }
 
+.status-pill {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
 .status-pill.pendente {
     background-color: #fef3c7;
     color: #d97706;
 }
 
-.status-pill.concluido {
+.status-pill.em-analise {
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.status-pill.aprovada {
     background-color: #dcfce7;
     color: #15803d;
+}
+
+.status-pill.recusada {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.status-pill.transferida {
+    background-color: #e2e8f0;
+    color: #475569;
 }
 
 /* Botão de Ação Concluir Transferência */
