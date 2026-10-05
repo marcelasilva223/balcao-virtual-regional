@@ -283,13 +283,14 @@
 
                 <div class="table-responsive">
                     <table class="requests-table">
-                        <thead>
+                       <thead>
                             <tr>
-                                <th>ITEM / PATRIMÔNIO</th>
-                                <th>ESCOLA SOLICITANTE</th>
-                                <th>ESCOLA DOADORA</th>
-                                <th>DATA PEDIDO</th>
-                                <th>STATUS</th>
+                            <th>ITEM / PATRIMÔNIO</th>
+                            <th>ESCOLA SOLICITANTE</th>
+                            <th>ESCOLA DOADORA</th>
+                            <th>DATA PEDIDO</th>
+                            <th>STATUS</th>
+                            <th>AÇÃO</th>
                             </tr>
                         </thead>
                         <tbody id="requests-table-body">
@@ -430,3 +431,193 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!-- MODAL DE DETALHES DA SOLICITAÇÃO -->
+<div id="modal-request-details" class="modal-overlay">
+
+    <div class="modal-container request-details-container">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="badge-category-modal">
+                    SOLICITAÇÃO DE TRANSFERÊNCIA
+                </span>
+
+                <h2 class="request-details-title">
+                    Detalhes da Solicitação
+                </h2>
+            </div>
+
+            <button
+                type="button"
+                class="btn-close-modal"
+                onclick="closeRequestDetails()"
+                aria-label="Fechar"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <!-- DADOS DO BEM -->
+            <div class="request-detail-section">
+
+                <div class="request-detail-section-title">
+                    <i class="fa-solid fa-box"></i>
+                    Dados do Bem
+                </div>
+
+                <div class="request-detail-grid">
+
+                    <div class="request-detail-item">
+                        <span>Item</span>
+                        <strong id="request-detail-item">
+                            --
+                        </strong>
+                    </div>
+
+                    <div class="request-detail-item">
+                        <span>Patrimônio / Tombo</span>
+                        <strong id="request-detail-patrimony">
+                            --
+                        </strong>
+                    </div>
+
+                    <div class="request-detail-item">
+                        <span>Escola Doadora</span>
+                        <strong id="request-detail-donor-school">
+                            --
+                        </strong>
+                    </div>
+
+                    <div class="request-detail-item">
+                        <span>Quantidade Solicitada</span>
+                        <strong id="request-detail-quantity">
+                            --
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DADOS DA SOLICITAÇÃO -->
+            <div class="request-detail-section">
+
+                <div class="request-detail-section-title">
+                    <i class="fa-solid fa-file-lines"></i>
+                    Dados da Solicitação
+                </div>
+
+                <div class="request-detail-grid">
+
+                    <div class="request-detail-item">
+                        <span>Escola Solicitante</span>
+                        <strong id="request-detail-requester-school">
+                            --
+                        </strong>
+                    </div>
+
+                    <div class="request-detail-item">
+                        <span>Responsável</span>
+                        <strong id="request-detail-requester-responsible">
+                            --
+                        </strong>
+                    </div>
+
+                    <div class="request-detail-item">
+                        <span>Data da Solicitação</span>
+                        <strong id="request-detail-date">
+                            --
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="request-detail-text">
+                    <span>Justificativa da Necessidade</span>
+                    <p id="request-detail-justification">
+                        --
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- ANDAMENTO -->
+            <div class="request-detail-section">
+
+                <div class="request-detail-section-title">
+                    <i class="fa-solid fa-route"></i>
+                    Andamento da Solicitação
+                </div>
+
+                <div class="request-status-highlight">
+                    <span>Status atual</span>
+
+                    <span
+                        id="request-detail-status"
+                        class="status-pill pendente"
+                    >
+                        Pendente
+                    </span>
+                </div>
+
+
+                <div class="request-detail-grid">
+
+                    <div class="request-detail-item">
+                        <span>Data da Análise</span>
+                        <strong id="request-detail-analysis-date">
+                            --
+                        </strong>
+                    </div>
+
+                    <div class="request-detail-item">
+                        <span>Responsável pela Análise</span>
+                        <strong id="request-detail-analysis-responsible">
+                            --
+                        </strong>
+                    </div>
+
+                    <div class="request-detail-item">
+                        <span>Data da Transferência</span>
+                        <strong id="request-detail-transfer-date">
+                            --
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="request-detail-text">
+                    <span>Observação / Pare do Patrimônio</span>
+                    <p id="request-detail-analysis-observation">
+                        Nenhuma observação registrada.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn-modal-cancel"
+                    onclick="closeRequestDetails()"
+                >
+                    Fechar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
