@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbyBCtztXvxazxFrRezp2IAJJpQ_U4LMEkevxbrz34T7gyGJbbi4E5mAzmP059o5u4uNXQ/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyBCtztXvxazxFrRezp2IAJJpQ_U4LMEkevxbrz34T7gyGJbbi4E5mAzmP059o5u4uNXQ/exec";
 
 let allItems = [];
 let selectedImageBase64 = "";
@@ -529,13 +529,30 @@ function renderRequestsTable() {
 
         let statusClass = "pendente";
 
-        if (
-            status === "Concluído" ||
-            status === "Aprovada" ||
-            status === "Transferido"
-        ) {
-            statusClass = "concluido";
-        }
+        switch (status) {
+            case "Pendente":
+                statusClass = "pendente";
+                break;
+
+        case "Em análise":
+                statusClass = "em-analise";
+                break;
+
+        case "Aprovada":
+                statusClass = "aprovada";
+                break;
+
+        case "Recusada":
+                statusClass = "recusada";
+                break;
+
+        case "Transferida":
+                statusClass = "transferida";
+                break;
+
+        default:
+        statusClass = "pendente";
+}
 
         const qtyText = req.requestedQuantity
             ? ` (Qtd: ${req.requestedQuantity})`
