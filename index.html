@@ -268,40 +268,223 @@
             </div>
         </section>
 
-        <!-- ABA 3: SOLICITAÇÕES -->
-        <section id="tab-requests" class="tab-content">
-            <div class="requests-card">
-                <div class="requests-header">
-                    <div>
-                        <h2>Histórico de Solicitações de Transferência</h2>
-                        <p class="requests-subtitle">Acompanhe os pedidos de transferência de bens realizados entre as unidades.</p>
-                    </div>
-                    <span class="storage-badge">
-                        <i class="fa-solid fa-cloud"></i> Dados centralizados
-                    </span>
-                </div>
+       <!-- ABA 3: SOLICITAÇÕES -->
+<section id="tab-requests" class="tab-content">
 
-                <div class="table-responsive">
-                    <table class="requests-table">
-                       <thead>
-                            <tr>
-                            <th>ITEM / PATRIMÔNIO</th>
-                            <th>ESCOLA SOLICITANTE</th>
-                            <th>ESCOLA DOADORA</th>
-                            <th>DATA PEDIDO</th>
-                            <th>STATUS</th>
-                            <th>AÇÃO</th>
-                            </tr>
-                        </thead>
-                        <tbody id="requests-table-body">
-                            <!-- Preenchido dinamicamente pelo script.js -->
-                        </tbody>
-                    </table>
-                </div>
+    <div class="requests-card">
+
+        <div class="requests-header">
+            <div>
+                <h2>Solicitações de Transferência</h2>
+                <p class="requests-subtitle">
+                    Consulte e acompanhe os pedidos de transferência de bens realizados entre as unidades.
+                </p>
             </div>
-        </section>
 
-    </main>
+            <span class="storage-badge">
+                <i class="fa-solid fa-cloud"></i> Dados centralizados
+            </span>
+        </div>
+
+
+        <!-- FILTROS DAS SOLICITAÇÕES -->
+        <div class="requests-filters-card">
+
+            <div class="requests-filters-title">
+                <i class="fa-solid fa-filter"></i>
+                Filtros de pesquisa
+            </div>
+
+
+            <div class="requests-filters-grid">
+
+                <!-- PESQUISA -->
+                <div class="filter-group requests-search-group">
+
+                    <label for="request-search">
+                        Pesquisar
+                    </label>
+
+                    <div class="input-with-icon">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="text"
+                            id="request-search"
+                            placeholder="Item, patrimônio ou escola..."
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+                <div class="filter-group">
+
+                    <label for="request-filter-status">
+                        Status
+                    </label>
+
+                    <select id="request-filter-status">
+
+                        <option value="">
+                            Todos os Status
+                        </option>
+
+                        <option value="Pendente">
+                            Pendente
+                        </option>
+
+                        <option value="Em análise">
+                            Em análise
+                        </option>
+
+                        <option value="Aprovada">
+                            Aprovada
+                        </option>
+
+                        <option value="Recusada">
+                            Recusada
+                        </option>
+
+                        <option value="Transferida">
+                            Transferida
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ESCOLA SOLICITANTE -->
+                <div class="filter-group">
+
+                    <label for="request-filter-requester-school">
+                        Escola solicitante
+                    </label>
+
+                    <select id="request-filter-requester-school">
+
+                        <option value="">
+                            Todas as escolas
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ESCOLA DOADORA -->
+                <div class="filter-group">
+
+                    <label for="request-filter-donor-school">
+                        Escola doadora
+                    </label>
+
+                    <select id="request-filter-donor-school">
+
+                        <option value="">
+                            Todas as escolas
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATA INICIAL -->
+                <div class="filter-group">
+
+                    <label for="request-date-start">
+                        Data inicial
+                    </label>
+
+                    <input
+                        type="date"
+                        id="request-date-start"
+                    >
+
+                </div>
+
+
+                <!-- DATA FINAL -->
+                <div class="filter-group">
+
+                    <label for="request-date-end">
+                        Data final
+                    </label>
+
+                    <input
+                        type="date"
+                        id="request-date-end"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="requests-filters-footer">
+
+                <span
+                    id="request-filter-counter"
+                    class="item-count"
+                >
+                    Mostrando 0 solicitação(ões)
+                </span>
+
+                <button
+                    type="button"
+                    id="btn-clear-request-filters"
+                    class="btn-clear-filters"
+                >
+                    <i class="fa-solid fa-rotate-right"></i>
+                    Limpar filtros
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABELA -->
+        <div class="table-responsive">
+
+            <table class="requests-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ITEM / PATRIMÔNIO</th>
+
+                        <th>ESCOLA SOLICITANTE</th>
+
+                        <th>ESCOLA DOADORA</th>
+
+                        <th>DATA PEDIDO</th>
+
+                        <th>STATUS</th>
+
+                        <th>AÇÃO</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="requests-table-body">
+                    <!-- Preenchido dinamicamente pelo script.js -->
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
 
     <!-- MODAL DE DETALHES E SOLICITAÇÃO DE TRANSFERÊNCIA -->
     <div id="modal-details" class="modal-overlay">
