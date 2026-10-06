@@ -353,9 +353,10 @@ function filterItems() {
             !condition ||
             item.condition === condition;
 
-         const matchesStatus =
-             !status ||
-             String(req.status || "").trim() === status;
+        const matchesStatus =
+    status
+        ? String(item.status || "").trim() === status
+        : String(item.status || "").trim() !== "Indisponível";
 
 
         return (
