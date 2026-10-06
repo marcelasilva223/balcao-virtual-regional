@@ -1276,9 +1276,8 @@ function applyRequestFilters() {
                -------------------------------------------------------------- */
 
             const matchesStatus =
-                status
-                    ? String(item.status || "").trim() === status
-                    : String(item.status || "").trim() !== "Indisponível";
+                !status ||
+                String(req.status || "").trim() === status;
 
             /* --------------------------------------------------------------
                ESCOLA SOLICITANTE
