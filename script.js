@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Carrega somente o catálogo ao abrir o site
     loadFromGoogleSheets();
 
+    setupRequestFilters();
+    
     const modalOverlay = document.getElementById('modal-details');
 
     if (modalOverlay) {
@@ -429,7 +431,9 @@ async function loadRequestsFromGoogleSheets() {
 
         allRequests = data;
 
-        renderRequestsTable();
+        populateRequestSchoolFilters();
+
+        applyRequestFilters();
 
     } catch (error) {
 
@@ -447,6 +451,310 @@ async function loadRequestsFromGoogleSheets() {
             badgeEl.textContent = "0";
         }
     }
+}
+
+function applyRequestFilters() {
+
+    const search = (
+        document.getElementById('request-search')?.value || ''
+    ).trim().toLowerCase();
+
+    const status = (
+        document.getElementById('request-filter-status')?.value || ''
+    ).trim();
+
+    const requesterSchool = (
+        document.getElementById('request-filter-requester-school')?.value || ''
+    ).trim();
+
+    const donorSchool = (
+        document.getElementById('request-filter-donor-school')?.value || ''
+    ).trim();
+
+    const startDate = (
+        document.getElementById('request-date-start')?.value || ''
+    ).trim();
+
+    const endDate = (
+        document.getElementById('request-date-end')?.value || ''
+    ).trim();
+
+
+    const filteredRequests = allRequests.filter(req => {
+
+        /* --------------------------------------------------------------
+           PESQUISA
+           Procura por item, patrimônio, escola solicitante ou doadora.
+           -------------------------------------------------------------- */
+
+        const searchText = [
+            req.itemTitle,
+            req.patrimony,
+            req.requesterSchool,
+            req.donorSchool
+        ]
+        .map(value => String(value || '').toLowerCase())
+        .join(' ');
+
+        const matchesSearch =
+            !search ||
+            searchText.includes(search);
+
+
+        /* --------------------------------------------------------------
+           STATUS
+           -------------------------------------------------------------- */
+
+        const matchesStatus =
+            !status ||
+            String(req.status || '').trim() === status;
+
+
+        /* --------------------------------------------------------------
+           ESCOLA SOLICITANTE
+           -------------------------------------------------------------- */
+
+        const matchesRequesterSchool =
+            !requesterSchool ||
+            String(req.requesterSchool || '').trim() === requesterSchool;
+
+
+        /* --------------------------------------------------------------
+           ESCOLA DOADORA
+           -------------------------------------------------------------- */
+
+        const matchesDonorSchool =
+            !donorSchool ||
+            String(req.donorSchool || '').trim() === donorSchool;
+
+
+        /* --------------------------------------------------------------
+           DATA
+           -------------------------------------------------------------- */
+
+        let matchesStartDate = true;
+        let matchesEndDate = true;
+
+        if (startDate || endDate) {
+
+            const requestDate = parseRequestDate(req.date);
+
+            if (!requestDate) {
+                return false;
+            }
+
+            requestDate.setHours(0, 0, 0, 0);
+
+
+            if (startDate) {
+
+                const start = new Date(startDate + 'T00:00:00');
+
+                if (requestDate < start) {
+                    matchesStartDate = false;
+                }
+            }
+
+
+            if (endDate) {
+
+                const end = new Date(endDate + 'T23:59:59');
+
+                if (requestDate > end) {
+                    matchesEndDate = false;
+                }
+            }
+        }
+
+
+        return (
+            matchesSearch &&
+            matchesStatus &&
+            matchesRequesterSchool &&
+            matchesDonorSchool &&
+            matchesStartDate &&
+            matchesEndDate
+        );
+    });
+
+
+    renderRequestsTable(filteredRequests);
+}
+
+function parseRequestDate(dateValue) {
+
+    if (!dateValue) {
+        return null;
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+        return null;
+    }
+
+    return date;
+}
+
+function populateRequestSchoolFilters() {
+
+    const requesterSelect = document.getElementById(
+        'request-filter-requester-school'
+    );
+
+    const donorSelect = document.getElementById(
+        'request-filter-donor-school'
+    );
+
+    if (!requesterSelect || !donorSelect) {
+        return;
+    }
+
+
+    const requesterSchools = [
+        ...new Set(
+            allRequests
+                .map(req => String(req.requesterSchool || '').trim())
+                .filter(Boolean)
+        )
+    ].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+
+    const donorSchools = [
+        ...new Set(
+            allRequests
+                .map(req => String(req.donorSchool || '').trim())
+                .filter(Boolean)
+        )
+    ].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+
+    /* ----------------------------------------------------------------------
+       Escola solicitante
+       ---------------------------------------------------------------------- */
+
+    requesterSelect.innerHTML = `
+        <option value="">Todas as escolas</option>
+    `;
+
+    requesterSchools.forEach(school => {
+
+        const option = document.createElement('option');
+
+        option.value = school;
+        option.textContent = school;
+
+        requesterSelect.appendChild(option);
+    });
+
+
+    /* ----------------------------------------------------------------------
+       Escola doadora
+       ---------------------------------------------------------------------- */
+
+    donorSelect.innerHTML = `
+        <option value="">Todas as escolas</option>
+    `;
+
+    donorSchools.forEach(school => {
+
+        const option = document.createElement('option');
+
+        option.value = school;
+        option.textContent = school;
+
+        donorSelect.appendChild(option);
+    });
+}
+
+function setupRequestFilters() {
+
+    const filterIds = [
+        'request-search',
+        'request-filter-status',
+        'request-filter-requester-school',
+        'request-filter-donor-school',
+        'request-date-start',
+        'request-date-end'
+    ];
+
+
+    filterIds.forEach(id => {
+
+        const element = document.getElementById(id);
+
+        if (!element) {
+            return;
+        }
+
+
+        const eventType =
+            element.tagName === 'INPUT'
+                ? 'input'
+                : 'change';
+
+
+        element.addEventListener(
+            eventType,
+            applyRequestFilters
+        );
+    });
+
+
+    const clearButton = document.getElementById(
+        'btn-clear-request-filters'
+    );
+
+
+    if (clearButton) {
+
+        clearButton.addEventListener(
+            'click',
+            clearRequestFilters
+        );
+    }
+}
+
+function clearRequestFilters() {
+
+    const search = document.getElementById('request-search');
+    const status = document.getElementById('request-filter-status');
+    const requesterSchool = document.getElementById(
+        'request-filter-requester-school'
+    );
+    const donorSchool = document.getElementById(
+        'request-filter-donor-school'
+    );
+    const startDate = document.getElementById('request-date-start');
+    const endDate = document.getElementById('request-date-end');
+
+
+    if (search) {
+        search.value = '';
+    }
+
+    if (status) {
+        status.value = '';
+    }
+
+    if (requesterSchool) {
+        requesterSchool.value = '';
+    }
+
+    if (donorSchool) {
+        donorSchool.value = '';
+    }
+
+    if (startDate) {
+        startDate.value = '';
+    }
+
+    if (endDate) {
+        endDate.value = '';
+    }
+
+
+    applyRequestFilters();
 }
 
 /* ==========================================================================
@@ -471,16 +779,20 @@ function saveRequests(requests) {
     renderRequestsTable();
 }
 
-function renderRequestsTable() {
+function renderRequestsTable(requestsToRender = null) {
 
     const tbody = document.getElementById('requests-table-body');
     const badgeEl = document.getElementById('requests-badge-count');
 
     if (!tbody) return;
 
-    const requests = Array.isArray(allRequests)
-        ? allRequests
-        : [];
+    const requests = Array.isArray(requestsToRender)
+    ? requestsToRender
+    : (
+        Array.isArray(allRequests)
+            ? allRequests
+            : []
+    );
 
     /* ----------------------------------------------------------------------
        Contador de solicitações pendentes
