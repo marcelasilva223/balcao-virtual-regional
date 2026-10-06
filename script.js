@@ -269,20 +269,10 @@ function renderCatalog(items) {
                     </div>
 
 
-                    <div class="card-meta-row">
-
-                        <span>
-                            <strong>Qtd:</strong>
-                            ${item.quantity || 1}
-                        </span>
-
-                        <span>
-                            <strong>Estado:</strong>
-                            ${item.condition || "Não informado"}
-                        </span>
-
-                    </div>
-
+               <div class="card-meta-row">
+                   <span><strong>Disponível:</strong> ${Number(item.availableQuantity) || 0}</span>
+                   <span><strong>Estado:</strong> ${item.condition || 'Não informado'}</span>
+               </div>
 
                     <button
                         class="btn-card-action"
@@ -418,151 +408,151 @@ function clearFilters() {
    ========================================================================== */
 
 function openModal(itemId) {
-
-    const item = allItems.find(
-        i => String(i.id) === String(itemId)
-    );
-
-
-    if (!item) {
-        return;
-    }
-
+    const item = allItems.find(i => String(i.id) === String(itemId));
+    if (!item) return;
 
     currentSelectedItem = item;
 
+    const availableQty = Number(item.availableQuantity) || 0;
 
-    const categoryBadge =
-        document.getElementById("modal-category-badge");
+    document.getElementById('modal-category-badge').textContent =
+        item.category || 'Geral';
 
-    const title =
-        document.getElementById("modal-item-title");
+    document.getElementById('modal-item-title').textContent =
+        item.title || 'Sem título';
 
-    const school =
-        document.getElementById("modal-school");
+    document.getElementById('modal-school').textContent =
+        item.school || 'Não informado';
 
-    const location =
-        document.getElementById("modal-location");
+    document.getElementById('modal-location').textContent =
+        item.location || 'Não informado';
 
-    const quantity =
-        document.getElementById("modal-quantity");
+    document.getElementById('modal-quantity').textContent =
+        availableQty;
 
-    const condition =
-        document.getElementById("modal-condition");
+    document.getElementById('modal-condition').textContent =
+        item.condition || 'Não informado';
 
-    const patrimony =
-        document.getElementById("modal-patrimony");
+    document.getElementById('modal-patrimony').textContent =
+        item.patrimony || 'Não possui / S/N';
 
-    const contactPerson =
-        document.getElementById("modal-contact-person");
+    document.getElementById('modal-contact-person').textContent =
+        item.contactPerson || 'Não informado';
 
-    const contactPhone =
-        document.getElementById("modal-contact-phone");
+    document.getElementById('modal-contact-phone').textContent =
+        item.phone || 'Não informado';
 
-    const description =
-        document.getElementById("modal-item-description");
+    document.getElementById('modal-item-description').textContent =
+        item.description || 'Sem descrição informada.';
 
-    const image =
-        document.getElementById("modal-item-image");
+    const imgEl = document.getElementById('modal-item-image');
 
+    imgEl.src =
+        item.image ||
+        'https://via.placeholder.com/400x250?text=Sem+Imagem';
 
-    if (categoryBadge) {
-        categoryBadge.textContent =
-            item.category || "Geral";
-    }
+    document.getElementById('form-modal-request').reset();
 
-    if (title) {
-        title.textContent =
-            item.title || "Sem título";
-    }
-
-    if (school) {
-        school.textContent =
-            item.school || "Não informado";
-    }
-
-    if (location) {
-        location.textContent =
-            item.location || "Não informado";
-    }
-
-    if (quantity) {
-        quantity.textContent =
-            item.quantity || "1";
-    }
-
-    if (condition) {
-        condition.textContent =
-            item.condition || "Não informado";
-    }
-
-    if (patrimony) {
-        patrimony.textContent =
-            item.patrimony || "Não possui / S/N";
-    }
-
-    if (contactPerson) {
-        contactPerson.textContent =
-            item.contactPerson || "Não informado";
-    }
-
-    if (contactPhone) {
-        contactPhone.textContent =
-            item.phone || "Não informado";
-    }
-
-    if (description) {
-        description.textContent =
-            item.description ||
-            "Sem descrição informada.";
-    }
-
-
-    if (image) {
-
-        image.src =
-            item.image ||
-            "https://via.placeholder.com/400x250?text=Sem+Imagem";
-    }
-
-
-    const requestForm =
-        document.getElementById("form-modal-request");
-
-
-    if (requestForm) {
-        requestForm.reset();
-    }
-
-
-    // Limita a quantidade solicitada à quantidade disponível
     const reqQtyInput =
-        document.getElementById("req-quantity");
+        document.getElementById('req-quantity');
 
+    const submitBtn =
+        document.querySelector(
+            '#form-modal-request .btn-modal-confirm'
+        );
 
     if (reqQtyInput) {
 
-        const availableQty =
-            parseInt(item.availableQuantity, 10) || 0;
+        if (availableQty > 0) {
 
+            reqQtyInput.min = "1";
+            reqQtyInput.max = availableQty.toString();
+            reqQtyInput.value = "1";
+            reqQtyInput.disabled = false;
 
-        reqQtyInput.min = "1";
-        reqQtyInput.max =
-            availableQty.toString();
+        } else {
 
-        reqQtyInput.value = "1";
+            reqQtyInput.removeAttribute('min');
+            reqQtyInput.removeAttribute('max');
+            reqQtyInput.value = "";
+            reqQtyInput.disabled = true;
+        }
+
+        let availabilityMessage =
+            document.getElementById(
+                'req-quantity-availability'
+            );
+
+        if (!availabilityMessage) {
+
+            availabilityMessage =
+                document.createElement('small');
+
+            availabilityMessage.id =
+                'req-quantity-availability';
+
+            availabilityMessage.style.display =
+                'block';
+
+            availabilityMessage.style.marginTop =
+                '6px';
+
+            availabilityMessage.style.fontSize =
+                '13px';
+
+            reqQtyInput.parentElement.appendChild(
+                availabilityMessage
+            );
+        }
+
+        if (availableQty === 0) {
+
+            availabilityMessage.textContent =
+                'Não há unidades disponíveis para solicitar no momento.';
+
+            availabilityMessage.style.color =
+                '#dc2626';
+
+            availabilityMessage.style.fontWeight =
+                '600';
+
+        } else {
+
+            availabilityMessage.textContent =
+                `${availableQty} unidade(s) disponível(is) para transferência.`;
+
+            availabilityMessage.style.color =
+                '#64748b';
+
+            availabilityMessage.style.fontWeight =
+                '400';
+        }
     }
 
+    if (submitBtn) {
+
+        submitBtn.disabled =
+            availableQty === 0;
+
+        if (availableQty === 0) {
+
+            submitBtn.innerHTML =
+                '<i class="fa-solid fa-ban"></i> Sem unidades disponíveis';
+
+        } else {
+
+            submitBtn.innerHTML =
+                '<i class="fa-solid fa-paper-plane"></i> Confirmar Solicitação';
+        }
+    }
 
     const modalEl =
-        document.getElementById("modal-details");
-
+        document.getElementById('modal-details');
 
     if (modalEl) {
-        modalEl.classList.add("active");
+        modalEl.classList.add('active');
     }
 }
-
 
 function closeModal() {
 
@@ -577,7 +567,6 @@ function closeModal() {
 
     currentSelectedItem = null;
 }
-
 
 /* ==========================================================================
    ENVIO DA SOLICITAÇÃO
