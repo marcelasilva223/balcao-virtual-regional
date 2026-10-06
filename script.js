@@ -543,7 +543,7 @@ function openModal(itemId) {
     if (reqQtyInput) {
 
         const availableQty =
-            parseInt(item.quantity, 10) || 1;
+            parseInt(item.availableQuantity, 10) || 0;
 
 
         reqQtyInput.min = "1";
