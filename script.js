@@ -220,7 +220,6 @@ function renderCatalog(items) {
             ) {
 
                 statusClass = "transferido";
-            }
 
              } else if (
                 String(statusText)
