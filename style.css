@@ -927,3 +927,105 @@ small { color: var(--text-muted); margin-top: 0.2rem; font-size: 0.78rem; }
 .btn-modal-confirm:hover {
     background-color: #15803d;
 }
+
+/* ==========================================================================
+   FILTROS DAS SOLICITAÇÕES
+   ========================================================================== */
+
+.requests-filters-card {
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.requests-filters-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--banner-bg);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.requests-filters-title i {
+    color: var(--primary-blue);
+}
+
+.requests-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.requests-filters-grid .filter-group {
+    margin-bottom: 0;
+}
+
+.requests-search-group {
+    grid-column: span 2;
+}
+
+.requests-filters-grid input,
+.requests-filters-grid select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    background-color: #ffffff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.requests-filters-grid input:focus,
+.requests-filters-grid select:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.08);
+}
+
+.requests-filters-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.requests-filters-footer .btn-clear-filters {
+    padding: 0;
+}
+
+@media (max-width: 992px) {
+
+    .requests-filters-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .requests-search-group {
+        grid-column: span 2;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .requests-filters-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .requests-search-group {
+        grid-column: span 1;
+    }
+
+    .requests-filters-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+}
