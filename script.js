@@ -222,6 +222,13 @@ function renderCatalog(items) {
                 statusClass = "transferido";
             }
 
+             } else if (
+                String(statusText)
+                    .toLowerCase()
+                    .includes("indispon")
+            ) {
+                statusClass = "indisponivel";
+            }
 
             const card = document.createElement("div");
 
@@ -399,7 +406,7 @@ function clearFilters() {
     }
 
 
-    renderCatalog(allItems);
+    filterItems();
 }
 
 
@@ -1267,15 +1274,14 @@ function applyRequestFilters() {
                 !search ||
                 searchText.includes(search);
 
-
             /* --------------------------------------------------------------
                STATUS
                -------------------------------------------------------------- */
 
             const matchesStatus =
-                !status ||
-                String(req.status || "").trim() === status;
-
+                status
+                    ? String(item.status || "").trim() === status
+                    : String(item.status || "").trim() !== "Indisponível";
 
             /* --------------------------------------------------------------
                ESCOLA SOLICITANTE
