@@ -2131,7 +2131,7 @@ function openRequestDetails(
     );
 
 
-    /* Marca as etapas */
+        /* Marca as etapas */
 
     const timelineSteps =
         document.querySelectorAll(
@@ -2158,7 +2158,8 @@ function openRequestDetails(
 
             step.classList.remove(
                 "completed",
-                "current"
+                "current",
+                "recusada"
             );
 
 
@@ -2181,6 +2182,66 @@ function openRequestDetails(
             }
         }
     );
+
+
+    /* Ajusta a etapa de resultado da análise */
+
+    const resultStep =
+        document.querySelector(
+            '.request-timeline-step[data-timeline-step="Aprovada"]'
+        );
+
+
+    if (resultStep) {
+
+        const resultLabel =
+            resultStep.querySelector(
+                ".request-timeline-content strong"
+            );
+
+
+        const resultIcon =
+            resultStep.querySelector(
+                ".request-timeline-marker i"
+            );
+
+
+        if (timelineStatus === "Recusada") {
+
+            if (resultLabel) {
+
+                resultLabel.textContent =
+                    "Recusada";
+            }
+
+
+            if (resultIcon) {
+
+                resultIcon.className =
+                    "fa-solid fa-circle-xmark";
+            }
+
+
+            resultStep.classList.add(
+                "recusada"
+            );
+
+        } else {
+
+            if (resultLabel) {
+
+                resultLabel.textContent =
+                    "Aprovada";
+            }
+
+
+            if (resultIcon) {
+
+                resultIcon.className =
+                    "fa-solid fa-circle-check";
+            }
+        }
+    }
    
     /* ----------------------------------------------------------------------
        DADOS DA ANÁLISE
