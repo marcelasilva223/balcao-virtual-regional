@@ -2435,6 +2435,14 @@ function openRequestDetails(
             "request-detail-transfer-label"
         );
 
+   if (transferLabel) {
+
+    transferLabel.textContent =
+        timelineStatus === "Recusada"
+            ? "Data da Recusa"
+            : "Data da Transferência";
+}
+
     setText(
         "request-detail-transfer-date",
         timelineStatus === "Recusada"
