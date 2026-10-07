@@ -2065,7 +2065,121 @@ function openRequestDetails(
             );
     }
 
+       /* ----------------------------------------------------------------------
+       LINHA DO TEMPO
+       ---------------------------------------------------------------------- */
 
+    const status =
+        request.status ||
+        "Pendente";
+
+
+    /* Data da solicitação */
+
+    setText(
+        "request-timeline-date-pendente",
+        formatRequestDate(
+            request.date
+        )
+    );
+
+
+    /* Data da análise */
+
+    setText(
+        "request-timeline-date-analise",
+        request.analysisDate
+            ? formatRequestDate(
+                request.analysisDate
+            )
+            : "--"
+    );
+
+
+    /* Data da aprovação */
+
+    setText(
+        "request-timeline-date-aprovada",
+        status === "Aprovada" ||
+        status === "Transferida"
+            ? (
+                request.analysisDate
+                    ? formatRequestDate(
+                        request.analysisDate
+                    )
+                    : "--"
+            )
+            : "--"
+    );
+
+
+    /* Data da transferência */
+
+    setText(
+        "request-timeline-date-transferida",
+        status === "Transferida"
+            ? (
+                request.transferDate
+                    ? formatRequestDate(
+                        request.transferDate
+                    )
+                    : "--"
+            )
+            : "--"
+    );
+
+
+    /* Marca as etapas da linha do tempo */
+
+    const timelineSteps =
+        document.querySelectorAll(
+            ".request-timeline-step"
+        );
+
+
+    const timelineOrder = [
+        "Pendente",
+        "Em análise",
+        "Aprovada",
+        "Transferida"
+    ];
+
+
+    const currentIndex =
+        timelineOrder.indexOf(
+            status
+        );
+
+
+    timelineSteps.forEach(
+        (step, index) => {
+
+            step.classList.remove(
+                "completed",
+                "current"
+            );
+
+
+            if (
+                currentIndex >= 0 &&
+                index < currentIndex
+            ) {
+
+                step.classList.add(
+                    "completed"
+                );
+
+            } else if (
+                currentIndex === index
+            ) {
+
+                step.classList.add(
+                    "current"
+                );
+            }
+        }
+    );
+   
     /* ----------------------------------------------------------------------
        DADOS DA ANÁLISE
        ---------------------------------------------------------------------- */
