@@ -1257,6 +1257,15 @@ small { color: var(--text-muted); margin-top: 0.2rem; font-size: 0.78rem; }
     color: #1d4ed8;
 }
 
+.request-timeline-step.current.recusada .request-timeline-marker {
+    background-color: #dc2626;
+    box-shadow: 0 0 0 2px #dc2626;
+    color: #ffffff;
+}
+
+.request-timeline-step.current.recusada .request-timeline-content strong {
+    color: #dc2626;
+}
 
 /* Etapa finalizada */
 .request-timeline-step.completed:last-child .request-timeline-marker {
