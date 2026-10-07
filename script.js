@@ -279,14 +279,28 @@ function renderCatalog(items) {
                    <span><strong>Estado:</strong> ${item.condition || 'Não informado'}</span>
                </div>
 
-                    <button
-                         class="btn-card-action"
-                         onclick="openModal('${item.id}')"
-                         ${Number(item.availableQuantity) === 0 ? "disabled" : ""}
-                     >
-                         <i class="fa-solid ${Number(item.availableQuantity) === 0 ? "fa-ban" : "fa-circle-info"}"></i>
-                         ${Number(item.availableQuantity) === 0 ? "Indisponível" : "Ver detalhes e Solicitar"}
-                     </button>
+               ${Number(item.availableQuantity) === 0
+    ? `
+        <button
+            class="btn-card-action btn-card-disabled"
+            type="button"
+            disabled
+        >
+            <i class="fa-solid fa-ban"></i>
+            Indisponível
+        </button>
+    `
+    : `
+        <button
+            class="btn-card-action"
+            type="button"
+            onclick="openModal('${item.id}')"
+        >
+            <i class="fa-solid fa-circle-info"></i>
+            Ver detalhes e Solicitar
+        </button>
+    `
+}
 
                 </div>
             `;
