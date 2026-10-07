@@ -353,6 +353,7 @@ body {
 .badge-status.disponivel { background-color: #22c55e; }
 .badge-status.solicitacao { background-color: #f97316; }
 .badge-status.transferido { background-color: #64748b; }
+.badge-status.indisponivel { background-color: #dc2626; }
 
 .badge-category {
     position: absolute;
