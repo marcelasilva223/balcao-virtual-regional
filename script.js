@@ -2065,11 +2065,11 @@ function openRequestDetails(
             );
     }
 
-       /* ----------------------------------------------------------------------
+         /* ----------------------------------------------------------------------
        LINHA DO TEMPO
        ---------------------------------------------------------------------- */
 
-    const status =
+    const timelineStatus =
         request.status ||
         "Pendente";
 
@@ -2078,9 +2078,11 @@ function openRequestDetails(
 
     setText(
         "request-timeline-date-pendente",
-        formatRequestDate(
-            request.date
-        )
+        request.date
+            ? formatRequestDate(
+                request.date
+            )
+            : "--"
     );
 
 
@@ -2100,8 +2102,8 @@ function openRequestDetails(
 
     setText(
         "request-timeline-date-aprovada",
-        status === "Aprovada" ||
-        status === "Transferida"
+        timelineStatus === "Aprovada" ||
+        timelineStatus === "Transferida"
             ? (
                 request.analysisDate
                     ? formatRequestDate(
@@ -2117,7 +2119,7 @@ function openRequestDetails(
 
     setText(
         "request-timeline-date-transferida",
-        status === "Transferida"
+        timelineStatus === "Transferida"
             ? (
                 request.transferDate
                     ? formatRequestDate(
@@ -2129,7 +2131,7 @@ function openRequestDetails(
     );
 
 
-    /* Marca as etapas da linha do tempo */
+    /* Marca as etapas */
 
     const timelineSteps =
         document.querySelectorAll(
@@ -2147,7 +2149,7 @@ function openRequestDetails(
 
     const currentIndex =
         timelineOrder.indexOf(
-            status
+            timelineStatus
         );
 
 
