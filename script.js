@@ -2131,7 +2131,13 @@ function openRequestDetails(
     );
 
 
-        /* Marca as etapas */
+    /* Marca as etapas */
+
+    const timeline =
+        document.querySelector(
+            ".request-timeline"
+        );
+
 
     const timelineSteps =
         document.querySelectorAll(
@@ -2154,7 +2160,7 @@ function openRequestDetails(
 
 
     timelineSteps.forEach(
-        (step, index) => {
+        step => {
 
             step.classList.remove(
                 "completed",
@@ -2163,26 +2169,203 @@ function openRequestDetails(
             );
 
 
-            if (
-                currentIndex >= 0 &&
-                index < currentIndex
-            ) {
-
-                step.classList.add(
-                    "completed"
-                );
-
-            } else if (
-                currentIndex === index
-            ) {
-
-                step.classList.add(
-                    "current"
-                );
-            }
+            step.style.display = "";
         }
     );
 
+
+    /*
+       Fluxo normal
+    */
+
+    if (
+        timelineStatus !== "Recusada"
+    ) {
+
+        timelineSteps.forEach(
+            (step, index) => {
+
+                if (
+                    currentIndex >= 0 &&
+                    index < currentIndex
+                ) {
+
+                    step.classList.add(
+                        "completed"
+                    );
+
+                } else if (
+                    currentIndex === index
+                ) {
+
+                    step.classList.add(
+                        "current"
+                    );
+                }
+            }
+        );
+    }
+
+
+    /*
+       Fluxo recusado
+    */
+
+    if (
+        timelineStatus === "Recusada"
+    ) {
+
+        const transferStep =
+            document.querySelector(
+                '.request-timeline-step[data-timeline-step="Transferida"]'
+            );
+
+
+        const refusedStep =
+            document.querySelector(
+                '.request-timeline-step[data-timeline-step="Aprovada"]'
+            );
+
+
+        /*
+           A transferência deixa de fazer parte
+           da linha do tempo.
+        */
+
+        if (transferStep) {
+
+            transferStep.style.display =
+                "none";
+        }
+
+
+        /*
+           Solicitação registrada e análise
+           ficam como etapas concluídas.
+        */
+
+        timelineSteps.forEach(
+            step => {
+
+                const stepStatus =
+                    step.dataset.timelineStep;
+
+
+                if (
+                    stepStatus === "Pendente" ||
+                    stepStatus === "Em análise"
+                ) {
+
+                    step.classList.add(
+                        "completed"
+                    );
+                }
+            }
+        );
+
+
+        /*
+           A etapa "Aprovada" passa a representar
+           o resultado "Recusada".
+        */
+
+        if (refusedStep) {
+
+            const resultLabel =
+                refusedStep.querySelector(
+                    ".request-timeline-content strong"
+                );
+
+
+            const resultIcon =
+                refusedStep.querySelector(
+                    ".request-timeline-marker i"
+                );
+
+
+            if (resultLabel) {
+
+                resultLabel.textContent =
+                    "Recusada";
+            }
+
+
+            if (resultIcon) {
+
+                resultIcon.className =
+                    "fa-solid fa-circle-xmark";
+            }
+
+
+            refusedStep.classList.add(
+                "current",
+                "recusada"
+            );
+        }
+
+
+        /*
+           A linha do tempo recebe uma classe
+           específica para terminar na recusa.
+        */
+
+        if (timeline) {
+
+            timeline.classList.add(
+                "timeline-recusada"
+            );
+        }
+
+    } else {
+
+        /*
+           Garante que o fluxo normal volte ao
+           estado original quando outra solicitação
+           for aberta.
+        */
+
+        const resultStep =
+            document.querySelector(
+                '.request-timeline-step[data-timeline-step="Aprovada"]'
+            );
+
+
+        if (resultStep) {
+
+            const resultLabel =
+                resultStep.querySelector(
+                    ".request-timeline-content strong"
+                );
+
+
+            const resultIcon =
+                resultStep.querySelector(
+                    ".request-timeline-marker i"
+                );
+
+
+            if (resultLabel) {
+
+                resultLabel.textContent =
+                    "Aprovada";
+            }
+
+
+            if (resultIcon) {
+
+                resultIcon.className =
+                    "fa-solid fa-circle-check";
+            }
+        }
+
+
+        if (timeline) {
+
+            timeline.classList.remove(
+                "timeline-recusada"
+            );
+        }
+    }
 
     /* Ajusta a etapa de resultado da análise */
 
@@ -2242,6 +2425,44 @@ function openRequestDetails(
             }
         }
     }
+
+       /* ----------------------------------------------------------------------
+       RÓTULO DA DATA DE TRANSFERÊNCIA / RECUSA
+       ---------------------------------------------------------------------- */
+
+    const transferLabel =
+        document.getElementById(
+            "request-detail-transfer-label"
+        );
+
+
+    if (transferLabel) {
+
+        transferLabel.textContent =
+            timelineStatus === "Recusada"
+                ? "Data da Recusa"
+                : "Data da Transferência";
+    }
+
+
+    setText(
+        "request-detail-transfer-date",
+        timelineStatus === "Recusada"
+            ? (
+                request.analysisDate
+                    ? formatRequestDate(
+                        request.analysisDate
+                    )
+                    : "--"
+            )
+            : (
+                request.transferDate
+                    ? formatRequestDate(
+                        request.transferDate
+                    )
+                    : "--"
+            )
+    );
    
     /* ----------------------------------------------------------------------
        DADOS DA ANÁLISE
