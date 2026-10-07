@@ -437,6 +437,13 @@ body {
     background-color: var(--primary-hover);
 }
 
+.btn-card-action.btn-card-disabled,
+.btn-card-action.btn-card-disabled:hover {
+    background-color: #e5e7eb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
 /* ==========================================================================
    ABA DE SOLICITAÇÕES (HISTÓRICO SIMPLIFICADO)
    ========================================================================== */
