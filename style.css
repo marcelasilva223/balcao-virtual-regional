@@ -1285,3 +1285,16 @@ small { color: var(--text-muted); margin-top: 0.2rem; font-size: 0.78rem; }
     }
 
 }
+.request-timeline.timeline-recusada::before {
+    bottom: 3.7rem;
+}
+
+.request-timeline-step.current.recusada .request-timeline-marker {
+    background-color: #dc2626;
+    box-shadow: 0 0 0 2px #dc2626;
+    color: #ffffff;
+}
+
+.request-timeline-step.current.recusada .request-timeline-content strong {
+    color: #dc2626;
+}
