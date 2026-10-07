@@ -2485,19 +2485,43 @@ function openRequestDetails(
     );
 
 
-    /* ----------------------------------------------------------------------
-       DATA DA TRANSFERÊNCIA
+       /* ----------------------------------------------------------------------
+       DATA DA TRANSFERÊNCIA / RECUSA
        ---------------------------------------------------------------------- */
+
+    const transferLabel =
+        document.getElementById(
+            "request-detail-transfer-label"
+        );
+
+
+    if (transferLabel) {
+
+        transferLabel.textContent =
+            timelineStatus === "Recusada"
+                ? "Data da Recusa"
+                : "Data da Transferência";
+    }
+
 
     setText(
         "request-detail-transfer-date",
-        request.transferDate
-            ? formatRequestDate(
-                request.transferDate
+        timelineStatus === "Recusada"
+            ? (
+                request.analysisDate
+                    ? formatRequestDate(
+                        request.analysisDate
+                    )
+                    : "--"
             )
-            : "--"
+            : (
+                request.transferDate
+                    ? formatRequestDate(
+                        request.transferDate
+                    )
+                    : "--"
+            )
     );
-
 
     /* ----------------------------------------------------------------------
        OBSERVAÇÃO / PARE
