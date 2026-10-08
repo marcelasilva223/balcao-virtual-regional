@@ -2367,65 +2367,6 @@ function openRequestDetails(
         }
     }
 
-    /* Ajusta a etapa de resultado da análise */
-
-    const resultStep =
-        document.querySelector(
-            '.request-timeline-step[data-timeline-step="Aprovada"]'
-        );
-
-
-    if (resultStep) {
-
-        const resultLabel =
-            resultStep.querySelector(
-                ".request-timeline-content strong"
-            );
-
-
-        const resultIcon =
-            resultStep.querySelector(
-                ".request-timeline-marker i"
-            );
-
-
-        if (timelineStatus === "Recusada") {
-
-            if (resultLabel) {
-
-                resultLabel.textContent =
-                    "Recusada";
-            }
-
-
-            if (resultIcon) {
-
-                resultIcon.className =
-                    "fa-solid fa-circle-xmark";
-            }
-
-
-            resultStep.classList.add(
-                "recusada"
-            );
-
-        } else {
-
-            if (resultLabel) {
-
-                resultLabel.textContent =
-                    "Aprovada";
-            }
-
-
-            if (resultIcon) {
-
-                resultIcon.className =
-                    "fa-solid fa-circle-check";
-            }
-        }
-    }
-
        /* ----------------------------------------------------------------------
        RÓTULO DA DATA DE TRANSFERÊNCIA / RECUSA
        ---------------------------------------------------------------------- */
@@ -2480,45 +2421,6 @@ function openRequestDetails(
         "request-detail-analysis-responsible",
         request.analysisResponsible,
         "Não informado"
-    );
-
-
-       /* ----------------------------------------------------------------------
-       DATA DA TRANSFERÊNCIA / RECUSA
-       ---------------------------------------------------------------------- */
-
-    const transferLabel =
-        document.getElementById(
-            "request-detail-transfer-label"
-        );
-
-
-    if (transferLabel) {
-
-        transferLabel.textContent =
-            timelineStatus === "Recusada"
-                ? "Data da Recusa"
-                : "Data da Transferência";
-    }
-
-
-    setText(
-        "request-detail-transfer-date",
-        timelineStatus === "Recusada"
-            ? (
-                request.analysisDate
-                    ? formatRequestDate(
-                        request.analysisDate
-                    )
-                    : "--"
-            )
-            : (
-                request.transferDate
-                    ? formatRequestDate(
-                        request.transferDate
-                    )
-                    : "--"
-            )
     );
 
     /* ----------------------------------------------------------------------
