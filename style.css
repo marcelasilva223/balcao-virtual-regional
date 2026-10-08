@@ -1298,3 +1298,71 @@ small { color: var(--text-muted); margin-top: 0.2rem; font-size: 0.78rem; }
 .request-timeline-step.current.recusada .request-timeline-content strong {
     color: #dc2626;
 }
+/* ==========================================================================
+   HISTÓRICO DA SOLICITAÇÃO
+   ========================================================================== */
+
+.request-history {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.request-history-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    color: #1e3a8a;
+    font-size: 0.9rem;
+    font-weight: 800;
+
+    margin-bottom: 0.85rem;
+}
+
+.request-history-title i {
+    color: var(--primary-blue);
+}
+
+.request-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.request-history-empty {
+    color: var(--text-muted);
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+.request-history-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+
+    padding-left: 0.8rem;
+    border-left: 2px solid #cbd5e1;
+}
+
+.request-history-item-date {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.request-history-item-change {
+    color: var(--text-dark);
+    font-size: 0.86rem;
+    line-height: 1.4;
+}
+
+.request-history-item-change strong {
+    font-weight: 700;
+}
+
+.request-history-item-responsible {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
